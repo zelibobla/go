@@ -1,0 +1,43 @@
+<?php
+/**
+ * © Anton Zelenski 2012
+ * zelibobla@gmail.com
+ *
+ */
+
+$this->headScript()->appendFile( '/js/modules/user/user.js', 'text/javascript' );
+
+?>
+<div class="row" id="items">
+	<button class="item">+ Add user</button>
+</div>
+<? if( count( $this->users ) ) :?>
+	<table width="800">
+		<caption>Users</caption>
+		<thead>
+			<tr>
+				<th>login</th>
+				<th>name</th>
+				<th width="400"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<? foreach( $this->users as $user ) :?>
+				<tr item_name="<?=$user->getName()?>" item_id="<?=$user->getLogin()?>">
+					<td><?=$user->getName()?></td>
+					<td><?=$user->getLogin()?></td>
+					<td>
+						<div class="row">
+							<button class="change_password" id="change_password">change password</button>
+							<button class="item">edit</button>
+							<button class="delete">delete</button>
+						</div>
+					</td>
+				</tr>
+			<? endforeach ?>
+		</tbody>
+	</table>
+	<?=$this->paginationControl( $this->users )?>
+<? else : ?>
+	<h2>No users yet</h2>
+<? endif ?>

@@ -1,0 +1,37 @@
+<?php
+/**
+ * © Anton Zelenski 2012
+ * zelibobla@gmail.com
+ *
+ */
+?>
+<div class="users_layout">
+	<? if( count( $this->users ) ) :?>
+		<table>
+			<caption>Пользователи</caption>
+			<thead>
+				<tr>
+					<th>имя</th>
+					<th>email</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<? foreach( $this->users as $user ) :?>
+					<tr item_name="<?=$user->getName()?>" id="<?=$user->getId()?>">
+						<td><?=$user->getName()?></td>
+						<td><?=$user->getEmail()?></td>
+						<td class="controls">
+							<button class="item">редактировать</button>
+							<button class="delete"><div class="icon"></div>удалить</button>
+						</td>
+					</tr>
+				<? endforeach ?>
+			</tbody>
+		</table>
+		<?=$this->paginationControl( $this->users )?>
+	<? else : ?>
+		<h2>Пока что нет пользователей</h2>
+	<? endif ?>
+	<button class="item add"><div class="icon"></div>Добавить</button>
+</div>

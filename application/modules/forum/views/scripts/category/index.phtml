@@ -1,0 +1,62 @@
+<?
+/**
+ * © Anton Zelenski 2012
+ * zelibobla@gmail.com
+ *
+ */
+?>
+<h2>
+	<?=$this->category?>
+</h2>
+
+<table class="category_topics">
+	<thead>
+		<tr>
+			<th class="topic">Топик</th>
+			<th class="last_post">Свежее сообщение</th>
+			<th class="total_posts">Всего сообщений</th>
+		</tr>
+	</thead>
+	<tbody>
+		<? if( true == count( $this->posts ) ): ?>
+			<? foreach( $this->posts as $post ): ?>
+				<tr id="<?=$post->getId()?>"
+					 item_name="<?=$post->getTeaser()?>"
+					 category_id="<?=$post->getCategoryId()?>">
+					<td>
+						<a href="<?=$this->url( array( 'id' => $post->getId() ), 'forum_post' )?>"><?=$post->getTeaser()?></a>
+						<div class="right">
+							<?=$post->getOwner()?>
+							<?=$this->date( $post->getDateCreated() )?>
+						</div>
+					</td>
+					<td>
+						<? if( true == ( $fresh_child = $post->getFreshChild() ) ): ?>
+							<a href="<?=$this->url( array( 'id' => $fresh_child->getId() ), 'forum_post' )?>"><?=$fresh_child?></a>
+							<div class="right">
+								<?=$fresh_child->getOwner()?>
+								<?=$this->date( $fresh_child->date_created )?></span>
+							</div>
+						<? endif ?>
+					</td>
+					<td><?=$post->getChildrenCount() ?></td>
+					<? if( $post->isEditableFor( $this->user ) ) :?>
+						<td>
+							<div class="controls">
+								<button class="item">редактировать</button>
+								<button class="delete">удалить</button>
+							</div>
+						</td>
+					<? endif ?>
+				</tr>
+			<? endforeach ?>
+		<? endif ?>
+	</tbody>
+</table>
+<?=$this->paginationControl( $this->posts )?>
+<br />
+<? if( $this->allowed( 'forum_post', 'create' ) ) :?>
+	<div class="row" id="items">
+		<button class="item" category_id="<?=$this->category->getId()?>">Новый топик</button>
+	</div>
+<? endif ?>

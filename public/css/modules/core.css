@@ -1,0 +1,65 @@
+/**
+ * © Anton Zelenski 2012
+ * zelibobla@gmail.com
+ *
+ */
+
+/**
+ * Core module layout
+ */
+
+.left_column{
+    float: left;
+    width: 600px;
+}
+.left_column td .item_thumbnail{
+    float: left;
+}
+.left_column td .brief{
+    margin: 0px 0px 0px 60px;
+    padding: 0px;
+    color: #eee;
+}
+.left_column .comments{
+    margin: 20px 0px 0px 0px;
+    font-size: 10px;
+    color: gray;
+}
+
+.central_column{
+    margin-left: 620px;
+}
+
+form.bulletin input, form.bulletin select{
+    width:300px
+}
+form.bulletin #fieldset-first_step{
+    border: none;
+}
+form.bulletin #fieldset-first_step .field{
+    margin:0px;
+}
+form.bulletin #fieldset-second_step{
+    border: none;
+    display: none;
+}
+form.bulletin textarea{
+    width: 500px;
+    height: 100px;
+}
+
+form.forum_post label{
+	width: 100px;
+}
+form.forum_post .field{
+	margin-left:100px;
+}
+form.forum_post input[type=text]{
+	width:400px;
+} 
+form.forum_post textarea{
+	width:400px;
+	height:150px;
+}
+
+

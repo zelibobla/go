@@ -1,0 +1,48 @@
+<?
+/**
+ * © Anton Zelenski 2012
+ * zelibobla@gmail.com
+ *
+ */
+?>
+<ul class="navigation">
+	<? 	$acl = $this->navigation()->getAcl();
+		$role = $this->navigation()->getRole();
+		$current_route = Zend_Controller_Front::getInstance()->getRouter()->getCurrentRouteName();
+		foreach( $this->container as $page ){
+			if( true == ( $resource = $page->getResource() ) &&
+				true == ( $privilege = $page->getPrivilege() ) &&
+				false == $acl->isAllowed( $role, $resource, $privilege ) ) continue;
+			$class = $page->getRoute() == $current_route ? "active" : "";
+			$menu_item = '';
+			$submenu = '';
+			$show_submenu = false;
+			if( 'home' == $page->getRoute() ){
+				$menu_item = '<a href="' . $this->url( array(), 'home' ) . '"><div class="icon_home"></div></a>';
+			} elseif( 'active' == $class ) {
+				$menu_item = $page;
+			} else {
+				$menu_item = $this->menu()->htmlify( $page );
+			}
+			$pages = $page->getPages();
+			if( !empty( $pages ) ){
+				$show_submenu = 'active' == $class;
+				$submenu = '<ul>';
+				foreach( $pages as $subpage ){
+					if( $subpage->getRoute() == $current_route ){
+						$show_submenu = true;
+						$submenu .= '<li class="active">' . $subpage->__toString() . '</li>';
+					} else {
+						$submenu .= '<li>' . $this->menu()->htmlify( $subpage ) . '</li>';
+					}
+					
+				}
+				$submenu .= '</ul>';
+			}
+			echo '<li class="' . $class . '">
+					<div class="menu_item">' . $menu_item . '</div>' .
+					( $show_submenu ? $submenu : '' ) .
+				 '</li>';
+		}
+	?>
+</ul>

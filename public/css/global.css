@@ -1,0 +1,407 @@
+/**
+ * © Anton Zelenski 2012
+ * zelibobla@gmail.com
+ *
+ */
+
+/**
+ * General staff
+ */
+@charset "utf-8";
+
+
+html, body {
+	margin: 0px;
+	padding: 0px;
+	line-height: 150%;
+	font-family: sans-serif;
+	font-size: 9pt;
+	color: #000;
+	height: 100%;
+}
+
+h1, h2, h3, h4 {
+	font-family: sans-serif;
+	font-weight: normal;
+	line-height: 130%;
+}
+
+a{
+	color: #55f;
+}
+
+a:visited{
+	color: #558;
+}
+
+a.local{
+	text-decoration: none;
+}
+
+img {
+	border: none;
+}
+ul{
+	list-style-type: none;
+}
+.local {
+	cursor: pointer;
+	border-bottom: 1px dotted #000;
+	color: #55f;
+}
+.item_icon{
+	border: 5px solid #eee;
+	width: 200px; height: 200px;
+}
+.item_thumbnail{
+	border: 3px solid #eee;
+	width: 30px; height: 30px;
+}
+
+.clear{
+	clear:both;
+}
+
+/**
+ * Technical staff to make footer always in the bottom of page
+ *
+ */
+.wrapper{
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -8em;
+	border: 1px white solid;
+} 
+.content{
+	padding: 100px 40px 20px 40px;
+}
+.push{
+	height:8em;
+}
+.footer{
+	height: 8em;
+	padding: 20px 0px 0px 380px;
+	margin: 0px;
+	color: #fff;
+	background: #335;
+}
+.footer a {
+	color:#aaa;
+}
+
+
+/**
+ * Intro page
+ *
+ */
+.intro{
+	min-height: 300px;
+	width: 100%;
+	margin: 100px 0px 0px 300px;
+}
+.intro .big_title{
+	font-size: 50px;
+	padding: 20px 0px 0px 35px;
+	color: #bbb;
+}
+.intro .central_column {
+	width: 350px;
+	padding: 50px 20px;
+}
+
+/**
+ * Menu layout
+ *
+ */
+.menu{
+	width:100%;
+	position: fixed; left: 0px; top: 0px;
+	background: white;
+	-webkit-box-shadow: 0 0 20px gray;
+}
+.menu .user_name{
+	margin: 20px 20px;
+	float: left;
+}
+.menu .logout{
+	margin: 20px 20px;
+	text-align: right;
+}
+.menu ul.navigation {
+	float: left;
+}
+.menu ul.navigation > li {
+	float:left;
+	cursor: pointer;
+}
+.menu ul.navigation > li .menu_item{
+	padding: 6px 24px;
+}
+.menu ul.navigation > li.active .menu_item{
+	cursor: default;
+	-moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+	background-color:#79bbff;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #84bbf3;
+	display:inline-block;
+	color:#ffffff;
+	font-size:15px;
+	padding:6px 24px;
+	margin: 0px 20px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #528ecc;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #59aeff), color-stop(1, #8accff) );
+	background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
+	background-color:#378de5;
+}
+.menu ul.navigation > li .menu_item a{
+	font-size: 14px;
+}
+.menu ul.navigation > li .menu_item .icon_home{
+	width: 16px; height:16px;
+	margin: 1px;
+	background-image: url(global-neutral-sprite.png);
+	background-position: -0px -112px;
+}
+.menu ul.navigation > li ul{
+	padding: 0px; margin: 0px 24px;
+}
+.menu ul.navigation > li ul > li.active{
+	cursor: default;
+	-moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+	background-color:#79bbff;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #84bbf3;
+	display:inline-block;
+	color:#ffffff;
+	font-size:12px;
+	padding:3px 12px;
+	margin-left: -12px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #528ecc;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #59aeff), color-stop(1, #8accff) );
+	background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
+	background-color:#378de5;
+}
+
+
+/**
+ * Auxilary menu layout
+ *
+ */
+.menu ul.auxilary_menu {
+	position: absolute; right: 0px; top: 0px;
+}
+.menu ul.auxilary_menu li{
+	float: left;
+	padding: 6px 24px;
+	cursor: pointer;
+}
+
+/**
+* paginator settings
+*
+*/
+.paginator{
+	font-size: 15px;
+	padding: 10px;
+	margin: 20px 0px;
+}
+.paginator .element{
+	float: left;
+	padding: 5px;
+}
+.paginator .element:hover{
+	background: #aad;
+}
+
+/**
+ *	Generic table layout
+ *
+ */
+table{}
+table caption{
+	text-align: left;
+	font-size: 20px;
+	padding: 20px 10px;
+}
+table th{
+	text-align:left;
+	font-weight: normal;
+	font-style: italic;
+	padding: 2px 10px;
+	color: #88a;
+	border-bottom: 1px solid #eef;
+}
+table td{
+	padding: 10px 10px;
+	height: 29px;
+}
+table tbody td{
+	vertical-align:top;
+}
+table tbody tr .controls{
+	display: none;
+}
+table tbody tr:hover{
+	background: #f9f9f9;
+}
+table tbody tr:hover .controls{
+	display: block;
+}
+
+/**
+ * Generic form layout
+ *
+ */
+form{}
+form legend{
+	padding-left: 20px;
+	font-size: 1.2em;
+}
+form label, label{
+	width: 150px;
+	float: left;
+}
+form .field{
+	margin-left: 170px;
+}
+form .row{
+	clear: both;
+	padding: 5px 20px;
+}
+form input[ type = text ], form input[ type = password ], form select{
+	width: 300px;
+}
+form textarea{
+	width: 300px;
+	height: 100px;
+}
+button, input[ type = submit ] {
+		-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+		-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+		box-shadow:inset 0px 1px 0px 0px #ffffff;
+		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+		background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+		background-color:#ededed;
+		-moz-border-radius:6px;
+		-webkit-border-radius:6px;
+		border-radius:6px;
+		border:1px solid #dcdcdc;
+		display:inline-block;
+		color:#777777;
+		font-size:13px;
+		padding:4px 20px;
+		text-decoration:none;
+		text-shadow:1px 1px 0px #ffffff;
+}
+button:hover, input[ type = submit ]:hover {
+		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+		background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+		background-color:#dfdfdf;
+}
+button:active, input[ type = submit ]:hover {
+		position:relative;
+		top:1px;
+}
+button .icon{
+	width: 16px; height: 16px;
+	float: left;
+	margin: 1px 5px 0px 0px;
+	background-repeat: no-repeat;
+}
+button.add .icon{
+	background-image: url(global-go-sprite.png);
+	background-position: 0px -192px;
+}
+button.edit .icon{
+	background-image: url(global-neutral-sprite.png);
+	background-position: -176px -112px;
+}
+button.delete .icon{
+	background-image: url(global-warning-sprite.png);
+	background-position: -32px -192px;
+}
+label.error{
+	clear: both;
+	font-size: 10px;
+	line-height: 13px;
+	padding: 10px 3px;
+	color: red;
+}
+/* Zend form validator will emit errors in ul */
+form ul.errors{
+	clear: both;
+	font-size: 10px;
+	line-height: 13px;
+	padding: 0px;
+	margin :0px;
+	color: red;
+}
+
+/**
+* Generic system notifications layout
+*
+*/
+.system_voice{
+	position: fixed;
+	top: 80px; right: 20px;
+	padding: 20px 20px 20px 60px;
+	width: 300px;
+	background: #fff;
+}
+.system_voice .close_button{
+	position: absolute; right: 10px; top: 10px;
+	width: 19px; height: 18px; 
+	background-position: -80px -128px;
+	background-image: url(/js/jquery-ui-1.8.16.custom/css/custom-theme/images/ui-icons_222222_256x240.png);
+	cursor: pointer;
+}
+.system_voice .close_button:hover{
+	border: 1px solid #88a;
+}
+.system_voice.error{
+	border: solid 5px #faa;
+}
+.system_voice.success{
+	border: solid 5px #afa;
+}
+.system_voice.neutral{
+	border: solid 5px #aaf;
+}
+.system_voice.warning{
+	border: solid 5px #ffa;
+}
+
+/**
+* Generic properties list such an user profile for example
+*
+*/
+ul.properties_list{
+	margin: 10px 0px; padding: 0px;
+}
+ul.properties_list li{
+	margin: 10px 0px;
+}
+ul.properties_list li label{
+	width: 100px;
+	float: left;
+}
+ul.properties_list li div{
+	margin-left: 120px;
+}

@@ -1,0 +1,69 @@
+<?
+/**
+ * © Anton Zelenski 2012
+ * zelibobla@gmail.com
+ *
+ */
+?>
+<div class="forum">
+	<h2>Форум</h2>
+	<table>
+		<thead>
+		<tr>
+			<th class="category">Категория</th>
+			<th class="post">Последнее сообщение</th>
+			<th class="controls"></th>
+		</tr>
+		</thead>
+		<tbody>
+
+		<?php if( $this->categories->count()	): ?>
+			<?php foreach( $this->categories as $c ): ?>
+				<tr id="<?=$c->getId()?>"
+					 item_name="<?=$c->getName()?>">
+					<td>
+						<a href="<?=$this->url( array( 'id'=> $c->getId() ), 'forum_category' )?>"><?=$c?></a>
+						<div><?=$c->getDescription()?></div>
+					</td>
+					<td>
+						<?php if ( true == ( $post = $c->getFreshPost() ) ):?>
+							<ul class="right">
+								<? $owner = $post->getOwner(); ?>
+								<li><?=$this->htmlLink( $owner,
+																$this->thumbnail( $owner ) . "<br />" .
+																$owner->__toString()
+															 )?></li>
+								<li><?=$this->date( $post->getDateCreated() )?></li>
+							</ul>
+
+							<a href="<?=$this->url( array( 'id'=> $post->getId() ), 'forum_post' )?>" title="<?=$post?>">
+								<?=$post?>
+							</a>
+						<?php else:?>
+						<center>Нет сообщений</center>
+						<?php endif;?>
+					</td>
+					<? if( $this->allowed( 'forum_category', 'edit' ) ) :?>
+						<td>
+							<div class="controls">
+								<button class="item">редактировать</button>
+								<button class="delete">удалить</button>
+							</div>
+						</td>
+					<? endif ?>
+				</tr>
+			<?php endforeach ?>
+		<?php else: ?>
+			<tr>
+				<td colspan="5"><h3>Нет категорий</h3></td>
+			</tr>
+		<?php endif ?>
+		</tbody>
+	</table>
+	<br />
+	<? if( $this->allowed( 'forum_category', 'create' ) ) :?>
+		<div class="row" id="items">
+			<button class="item">Новая категория</button>
+		</div>
+	<? endif ?>
+</div>

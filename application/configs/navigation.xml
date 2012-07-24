@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<nav>
+		<home>
+			<label>В начало</label>
+			<route>home</route>
+			<resource>user</resource>
+			<privilege>edit</privilege>
+		</home>
+		<users>
+			<label>Пользователи</label>
+			<route>users</route>
+			<resource>user_foreign</resource>
+			<privilege>edit</privilege>
+		</users>
+	</nav>
+</config>

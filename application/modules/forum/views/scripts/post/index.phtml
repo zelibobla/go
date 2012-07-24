@@ -1,0 +1,56 @@
+<?
+/**
+ * © Anton Zelenski 2012
+ * zelibobla@gmail.com
+ *
+ */
+?>
+<h3>
+	<a href="<?=$this->url( array( 'id'=> $this->category->getId() ), 'forum_category' ) ?>"><?=$this->category ?></a>
+</h3>
+<h2><?=$this->topic->getName()?></h2>
+<table class="topic_posts">
+	<thead>
+		<tr>
+			<th class="brief"></th>
+			<th class="body"></th>
+			<th class="controls"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<? foreach( $this->posts as $post ) :?>
+			<tr id="<?=$post->getId()?>"
+				 item_name="<?=$post->getTeaser()?>"
+				 category_id="<?=$post->getCategoryId()?>"
+				 parent_id="<?=$post->getParentid()?>">
+				<td>
+					<?=$this->icon( $post->getOwner() )?>
+					<ul class="brief">
+						<li>#<a href="#post-<?=$post->getId()?>"><?=$post->getId()?></a></li>
+						<li><?=$this->htmlLink( $post->getOwner() ) ?></a></li>
+						<li><?=$this->date( $post->getDateCreated() ) ?></li>
+					</ul>
+				</td>
+				<td>
+					<?=$post->getBody() ?>
+				</td>
+				<td>
+					<? if( $post->isEditableFor( $this->user ) ) : ?>
+						<div class="controls">
+							<button class="item">редактировать</button>
+							<button class="delete">удалить</button>
+						</div>
+					<? endif ?>
+				</td>
+			</tr>
+		<? endforeach ?>
+	</tbody>
+</table>
+<?=$this->paginationControl( $this->posts )?>
+<div class="clear"></div>
+<br />
+<? if( $this->allowed( 'forum_post', 'create' ) ) : ?>
+	<div class="row" id="items">
+		<button class="item" parent_id="<?=$this->topic->getId()?>">Ответить</button>
+	</div>
+<? endif ?>

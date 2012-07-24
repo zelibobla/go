@@ -1,0 +1,94 @@
+/**
+ * © Anton Zelenski 2012
+ * zelibobla@gmail.com
+ *
+ */
+
+/**
+ * Forum moudle layout
+ */
+
+form.forum_category label{
+	width: 100px;
+}
+form.forum_category .field{
+	margin-left:100px;
+}
+form.forum_category input[type=text]{
+	width:400px;
+} 
+form.forum_category textarea{
+	width:400px;
+	height:150px;
+}
+
+form.forum_post label{
+	width: 100px;
+}
+form.forum_post .field{
+	margin-left:100px;
+}
+form.forum_post input[type=text]{
+	width:400px;
+} 
+form.forum_post textarea{
+	width:400px;
+	height:150px;
+}
+
+.forum table{
+	width: 1000px;
+}
+.forum table th.category{
+	width: 300px;
+}
+.forum table th.post{
+	width: 400px;
+}
+.forum table th.controls{
+	width: 300px;
+}
+.forum table td .right{
+	float: right;
+	margin: 0px; padding: 0px;
+	color: #ccc;
+	width: 100px;
+}
+
+table.category_topics th.topic{
+	width: 200px;
+}
+table.category_topics th.last_post{
+	width: 400px;
+}
+table.category_topics th.total_posts{
+	width: 60px;
+}
+
+table.topic_posts{
+	width: 800px;
+}
+table.topic_posts th.brief{
+	width: 300px;
+}
+table.topic_posts th.body{
+	width: 200px;
+}
+table.topic_posts th.controls{
+	width: 200px;
+}
+table.topic_posts td{
+	vertical-align: top;
+}
+table.topic_posts td .item_icon{
+	float: left;
+}
+table.topic_posts td ul.brief{
+	margin: 0px 0px 0px 140px; padding: 0px;
+	width: 100px;
+	color: gray;
+}
+table.topic_posts td ul.brief li{
+	padding: 0px;
+}
+

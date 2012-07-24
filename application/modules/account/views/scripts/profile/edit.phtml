@@ -1,0 +1,16 @@
+<?php
+/**
+ * © Anton Zelenski 2012
+ * zelibobla@gmail.com
+ *
+ */
+ 
+	$this->headScript()->appendFile( '/js/uploader/client/fileuploader.js', 'text/javascript' )
+					   ->appendFile( '/js/jquery.imgareaselect-0.9.8/scripts/jquery.imgareaselect.pack.js', 'text/javascript' );
+	$this->headLink()->appendStylesheet( '/js/uploader/client/fileuploader.css' )
+					 ->appendStylesheet( '/js/jquery.imgareaselect-0.9.8/css/imgareaselect-default.css' );
+?>
+<div class="user_profile_edit">
+	<h1>Редактирование ваших данных</h1>
+	<?=$this->form?>
+</div>

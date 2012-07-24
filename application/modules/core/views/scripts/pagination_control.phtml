@@ -1,0 +1,36 @@
+<?
+/**
+ * © Anton Zelenski 2012
+ * zelibobla@gmail.com
+ *
+ */
+ if( $this->pageCount > 1 ): ?>
+	<div class="paginationControl">
+
+	<? if( isset( $this->previous ) ): ?>
+		<a href="<? echo $this->url( array( 'page' => $this->previous ) ) ?>">
+		 &larr;
+		</a> |
+	<? else: ?>
+		<span class="disabled">&larr;</span> |
+	<? endif ?>
+	 
+	<? foreach( $this->pagesInRange as $page ): ?>
+		<? if( $page != $this->current ): ?>
+			<a href="<? echo $this->url( array( 'page' => $page ) ) ?>">
+				<? echo $page ?>
+			</a> |
+		<? else: ?>
+			<? echo $page ?> |
+		<? endif ?>
+	<? endforeach ?>
+	 
+	<? if( isset( $this->next ) ):?>
+		<a href="<? echo $this->url( array( 'page' => $this->next ) ) ?>">
+			&rarr;
+		</a>
+	<? else: ?>
+		<span class="disabled">&rarr;</span>
+	<? endif ?>
+	</div>
+<? endif ?>
