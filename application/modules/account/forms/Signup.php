@@ -6,58 +6,43 @@
  */
 
 class Account_Form_Signup extends Go_Form {
-	
-	protected $_temporary_user;
 
 	public function init() {
 
 		$this->addElement( 'text', 'name', array(
 			'required'   => true,
-			'label'      => 'Имя:',
-			'value'		 => '',
-			'validators' => array( array( 'alnum' ),
-										  array( 'stringLength', false, array( 3, 64 ) ) )
-		));
+			'label'      => $this->_( 'user_name' ),
+			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ),
+			 					   array( 'uniqueLogin' ) )
+		) );
 
 		$this->addElement( 'text', 'email', array(
 			'required'   => true,
-			'label'      => 'Адрес электронной почты:',
-			'value'		 => '',
+			'label'      => $this->_( 'user_email' ),
 			'validators' => array( array( 'stringLength', false, array( 6, 64 ) ),
-										  array( 'emailAddress', true ) )
-		));
+								   array( 'emailAddress', true ) )
+		) );
 
 		$this->addElement( 'password', 'password', array(
 			'required'   => true,
-			'label'      => 'Пароль:',
-			'value'		 => '',
+			'label'      => $this->_( 'user_password' ),
 			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ) )
-		));
+		) );
 
 		$this->addElement( 'password', 'password_repeat', array(
 			'required'   => true,
-			'label'      => 'Повторите пароль:',
-			'value'		 => '',
-			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ) )
-		));
-
-		$this->getElement( 'email' )
-			  ->addPrefixPath( 'Go_Validate','Go/Validate','validate' )
-			  ->addValidator( 'uniqueLogin' );
-
-		$this->getElement( 'password_repeat' )
-			  ->addPrefixPath( 'Go_Validate','Go/Validate','validate' )
-			  ->addValidator( 'passwordConfirmation' );
+			'label'      => $this->_( 'user_password_repeat' ),
+			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ),
+			 					   array( 'passwordConfirmation' ) )
+		) );
 		
 		$this->addElement( 'submit', 'submit', array(
-			'ignore'			=> true,
-			'label'			=> 'Зарегистрироваться'
-		));
+			'ignore' => true,
+			'label'	 => $this->_( 'submit' )
+		) );
 
 		$this->setAction( "/account/signup" );
 		parent::init();
-	
-		$this->setAttrib( "id", "signup_form" );
 	}
 }
 

@@ -1,0 +1,10 @@
+Hi! Here are some reasons of why did this ZF topping came out.
+
+1. Basicly Zend ORM system provide Zend_Db_Table_Row classes which you can operate by public properties. Besides of incapsulation principle violation another good reason to change this is the application mobility.
+If you have $my_class->color = green; in 10 different places of your code and now you need to trigger some event after color changed, what should you do? Find all these places and rewrite your code. Nothing from OOP left in this case.
+In my case you just refactoring the $my_class->setColor() method to add necessary event trigger. That's all.
+
+Another reason to do setters and getters is to prevent illegal object properties access. Since I subclassing Zend_Db_Table_Row I'll have all properties in public. But anyway I do access to all of them only through setters and getters in myself convention. This is the way I can be sure nothing changed in my object values from outside and the object itself doesn't know changes.
+
+2. General idea about users: there are no not registered users. If user came to the site first time, system creates account for him, remember it and authenticate user under this account automatically. Later if user would like to register at the site – he is welcome, if not – system will remove his temporary account after sometime.
+What is advantage of this approach? We can save anything about user activity (system messages, language settings and etc.) and bring it all into account he'll make later. So actually when user creates account he just edit his temporary account - that's all.

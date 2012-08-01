@@ -5,74 +5,83 @@
  *
  */
 
-echo $this->doctype() ?>
+$defaults = Zend_Registry::get( 'defaults' );
+?>
+<?=$this->doctype() ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<?
-	$this->headLink()
-		->appendStylesheet( '/css/global.css' )
-		->appendStylesheet( '/js/jquery-ui-1.8.16.custom/css/custom-theme/jquery-ui-1.8.16.custom.css' )
-		->appendStylesheet( '/css/chosen.css' )
-		->headLink( array( 	'rel' => 'favicon',
-              					'href' => '/img/favicon.ico'),
-              					'PREPEND');
+	<?
+		$this->headLink()
+			->appendStylesheet( '/css/global.css' )
+			->appendStylesheet( '/js/jquery-ui-1.8.16.custom/css/custom-theme/jquery-ui-1.8.16.custom.css' )
+			->appendStylesheet( '/css/chosen.css' )
+			->headLink( array( 	'rel' => 'favicon',
+	              				'href' => '/img/favicon.ico' ),
+	              				'PREPEND' );
 
-	$this->headScript()->prependFile( '/js/jquery.chosen/chosen.jquery.min.js', 'text/javascript' )
-							 ->prependFile( '/js/jquery.validation-1.8.0/jquery.validate.min.js', 'text/javascript' )
-							 ->prependFile( '/js/jquery.json/jquery.json-2.2.min.js', 'text/javascript' )
-							 ->prependFile( '/js/jquery-ui-1.8.16.custom/js/jquery-ui-1.8.16.custom.min.js', 'text/javascript' )
-							 ->prependFile( '/js/jquery-ui-1.8.16.custom/js/jquery-1.6.2.min.js', 'text/javascript' )
+		$this->headScript()->prependFile( '/js/jquery.chosen/chosen.jquery.min.js', 'text/javascript' )
+						   ->prependFile( '/js/jquery.json/jquery.json-2.2.min.js', 'text/javascript' )
+						   ->prependFile( '/js/jquery-ui-1.8.16.custom/js/jquery-ui-1.8.16.custom.min.js', 'text/javascript' )
+						   ->prependFile( '/js/jquery-ui-1.8.16.custom/js/jquery-1.6.2.min.js', 'text/javascript' )
 							 
-							 ->appendFile( '/js/modules/core.js', 'text/javascript' )
-							 ->appendFile( '/js/widgets/system_voice.js', 'text/javascript' )
-							 ->appendFile( '/js/widgets/edit_item.js', 'text/javascript' );
+						   ->appendFile( '/js/modules/core.js', 'text/javascript' )
+						   ->appendFile( '/js/widgets/system_voice.js', 'text/javascript' )
+						   ->appendFile( '/js/widgets/edit_item.js', 'text/javascript' );
 
-	$module = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
-	$controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
-	if( is_file( APPLICATION_PATH . '/../public/css/modules/' . $module . '.css' ) ){
-		$this->headLink()->appendStylesheet( '/css/modules/' . $module . '.css' );
-	}
-	if( is_file( APPLICATION_PATH . '/../public/js/modules/' . $module . '.js' ) ){
-		$this->headScript()->appendFile( '/js/modules/' . $module . '.js' );
-	}
-	if( is_file( APPLICATION_PATH . '/../public/js/modules/' . $module . '_' . $controller . '.js' ) ){
-		$this->headScript()->appendFile( '/js/modules/' . $module . '_' . $controller . '.js' );
-	}
+		$request = Zend_Controller_Front::getInstance()->getRequest();
+		$module = $request->getModuleName();
+		$controller = $request->getControllerName();
+		$action = $request->getParam( 'action' );
+		if( is_file( APPLICATION_PATH . "/../public/css/modules/$module.css" ) ){
+			$this->headLink()->appendStylesheet( "/css/modules/$module.css" );
+		}
+		if( is_file( APPLICATION_PATH . "/../public/js/modules/$module.js" ) ){
+			$this->headScript()->appendFile( "/js/modules/$module.js" );
+		}
+		if( is_file( APPLICATION_PATH . "/../public/js/modules/{$module}_{$controller}.js" ) ){
+			$this->headScript()->appendFile( "/js/modules/{$module}_{$controller}.js" );
+		}
 	
-	echo $this->headTitle();
-	echo $this->headMeta();
-    echo $this->headLink();
-    echo $this->headScript();
-?>
+		echo $this->headTitle() .
+	 		 $this->headMeta() .
+			 $this->headLink() .
+			 $this->headScript();
+		
+	?>
+	<script type="text/javascript">
+		var Core = function(){
+			var _user = <?=json_encode( $this->user->getOptions() )?>,
+				_route = <?=json_encode( array( 'module' => $module, 'controller' => $controller, 'action' => $action ) )?>,
+				_resource = '<?=$this->resource?>';
+			this.getUser = function(){
+				return _user;
+			}
+			this.getRoute = function(){
+				return _route;
+			}
+			this.getResource = function(){
+				return _resource;
+			}
+		}
+		var core = new Core();
+		console.log( core.getRoute(), core.getUser(), core.getResource() );
+	</script>
 </head>
 <body>
+
 	<div class="wrapper">
 		<div class="menu">
-			<?	if( Zend_Auth::getInstance()->hasIdentity() &&
-					true == ( $user = Zend_Registry::get( 'user' ) ) &&
-					'guest' != $user->getRole() ) :?>
-				<div class="user_name">
-					Добро пожаловать, <a href="<?=$this->url( array( 'id' => $user->getId() ), 'user_profile' )?>"><?=$user?></a>!
-				</div>
+			<?	if( 'guest' != $this->user->getRole() ) :?>
+				<div class="user_name">Добро пожаловать, <?=$this->htmlLink( $this->user )?>!</div>
 			<? endif ?>
 			<?=$this->navigation()->menu()->setPartial( array( 'menu.phtml', 'core' ) )->menu()?>
-
-			<ul class="auxilary_menu">
-				<?	if( Zend_Auth::getInstance()->hasIdentity() &&
-						 'guest' != $user->getRole() ) :?>
-					<li><a href="<?=$this->url( array(), 'logout' )?>">Выход</a></li>
-				<? endif ?>
-			</ul>
 		</div>
-		<div class="clear"></div>
-		<div class="content">
-			<?=$this->layout()->content?>
-		</div>
+		<div class="content"><?=$this->layout()->content?></div>
 		<div class="push"></div>
 	</div>
 	<div class="footer">
-		&copy;  <?=date( 'Y', time() )?><br />
+		&copy; <?=$defaults[ 'application_name' ]?> <?=date( 'Y' )?>
 	</div>
 </body>
 </html>

@@ -5,88 +5,83 @@
  *
  */
 
+/**
+* generic core class being direct parent of most rich entities of the application
+* like a user for example
+*/
 class Core_Model_Entity extends Core_Model_Item {
 
 	protected $id;
-	protected $date_created;
-	protected $date_modified;
+	protected $created_at;
+	protected $updated_at;
 	protected $owner_id;
 	protected $is_active;
 	
+	/**
+	* kind of construct; define entity defaults
+	* @return void
+	*/
 	public function init(){
 		try{
-			$user_id = Zend_Registry::get( 'user' )->getLogin();
+			$user_id = Zend_Registry::get( 'user' )->getId();
 		} catch ( Exception $e ) {
 			$user_id = null;
 		}
 		if( false == $this->getId() ){
 			$this->setOwnerId( $user_id )
-				  ->setDateCreated( date( 'Y-m-d H:i:s', time() ) )
-				  ->setDateModified( date( 'Y-m-d H:i:s', time() ) )
-				  ->setIsActive( 'Y' );
+				 ->setCreatedAt( date( 'Y-m-d H:i:s', time() ) )
+				 ->setUpdatedAt( date( 'Y-m-d H:i:s', time() ) )
+				 ->setIsActive( 1 );
 		}
 	}
 	
-	public function put(){
-		$id = parent::put();
-		$this->setId( $id );
-		return $id;
-	}
-	
+	/**
+	* get owner of current entity 
+	* @return User_Model_User or null
+	*/
 	public function getOwner(){
-		return Go_Factory::get( "User_Model_User", $this->getOwnerId() );
+		if( false == $this->getOwnerId() ) return null;
+		return User_Model_User::build( $this->getOwnerId() );
 	}
 
-	public function getId(){
-		return $this->id;
-	}
-	public function setId( $id ){
-		$this->id = $id;
-	}
-	public function getDateCreated(){
-		return $this->date_created;
-	}
-	public function setDateCreated( $date ){
-		$this->date_created = $date;
-		return $this;
-	}
-	public function getDateModified(){
-		return $this->date_modified;
-	}
-	public function setDateModified( $date ){
-		$this->date_modified = $date;
-		return $this;
-	}
-	public function getOwnerId(){
-		return $this->owner_id;
-	}
-	public function setOwnerId( $identity ){
-		$this->owner_id = $identity;
-		return $this;
-	}
-	public function getIsActive(){
-		return $this->is_active;
-	}
-	public function setIsActive( $value ){
-		if( true === $value ||
-			 "Y" == $value ||
-			 "y" == $value ||
-			 0 != ( int ) $value ){
-			$this->is_active = "Y";
-		} elseif( false === $value ||
-					 "N" == $value ||
-					 "n" == $value ||
-					 0 == ( int ) $value ){
-			$this->is_active = "N";
+	/**
+	* return icon filename counting from webroot folder
+	* @return string
+	*/
+	public function getIconWebPath(){
+		$entity_name = $this->getEntityName();
+		if( false == $this->getId() ||
+			false == is_file( self::getStoragePath() . $this->getId() . '/' ) ){
+			return "/uploads/$entity_name/no_icon.jpg";
 		} else {
-			throw new Exception( 'Core_Model_Entity is_active should be a char( "Y", "N" ) or boolean or integer' );
+			$path = "/uploads/$entity_name/{$this->getId()}/" . $this->getPhoto();
+			return $path;
 		}
-		return $this;
-	}
-	public function setTableClass( $class_name ){
-		$this->_tableClass = $class_name;
-		return $this;
 	}
 
+	/**
+	* return path to files storage
+	* @return string
+	*/
+	public static function getStoragePath(){
+		return APPLICATION_PATH . "/../public/uploads/" . self::getEntityName() ;
+	}
+
+	/**
+	* return profile route name
+	* @return string
+	*/
+	public function getProfileRouteName(){
+		return "{$this->getEntityName()}_profile";
+	}
+
+	/**
+	* return exactly entity class name ( last part from all class name)
+	* @return string
+	*/
+	protected static function getEntityName(){
+		$class_name = get_called_class();
+		return strtolower( substr( $class_name, strrpos( $class_name, '_' ) + 1 ) );
+	}
 }
 

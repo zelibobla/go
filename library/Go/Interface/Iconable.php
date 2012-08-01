@@ -7,7 +7,7 @@
 
 interface Go_Interface_Iconable {
 
-    public function getIconPublicPath();
+    public function getIconWebPath();
 
 }
 

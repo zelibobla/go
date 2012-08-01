@@ -7,6 +7,10 @@
  
 class Core_Plugin_Misc extends Zend_Controller_Plugin_Abstract {
 	
+	/**
+	* define Zend_Auth_Adapter with custom password cryptography method
+	* @return Zend_Auth_Adapter_DbTable
+	*/
 	public static function getAuthAdapter() {
 		
 		$db_adapter = Zend_Db_Table::getDefaultAdapter();
@@ -15,22 +19,33 @@ class Core_Plugin_Misc extends Zend_Controller_Plugin_Abstract {
 			Go_Factory::getDbTable( 'User_Model_User' )->info( 'name' ),
 			'email',
 			'password_hash',
-			"MD5( '" . Zend_Registry::get( 'static_salt' ) . "' || ? || password_salt )" );
+			"MD5( CONCAT( '" . Zend_Registry::get( 'static_salt' ) . "' , ? , password_salt ) )" );
 		return $auth_adapter;
 	}
 	
 	/**
-	* returns randomly generated string of specified length
-	*
+	* retrieve from DB data to generate users access rights objects to use it all over the application
+	* !warning: roles are hardcoded here
+	* @return Zend_Acl object with defined permissions table
 	*/
-	public static function generateRandomString( $length ){
-		$pool = "abcdefghijkmonpqrstuvwxyz123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
-		$len = strlen( $pool );
-		$res = "";
-		for( $i = 0; $i < $length; $i++ ){
-			$res .= substr( $pool, rand( 0, $len ), 1 );
+	public static function getAcl(){
+
+		$acl = new Zend_Acl();
+		$acl->addRole( new Zend_Acl_Role( 'guest' ) )
+			->addRole( new Zend_Acl_Role( 'user' ) )
+			->addRole( new Zend_Acl_Role( 'admin' ), 'user' );
+
+		$resources = User_Model_Permission::getDbTable()->referenceResources();
+		foreach( $resources as $resource ){
+			$acl->add( new Zend_Acl_Resource( $resource ) );
 		}
-		return $res;
+
+		if( true == ( $permissions = User_Model_Permission::getDbTable()->get() ) ){
+			foreach( $permissions as $permission ){
+				$acl->allow( $permission->getRole(), $permission->getResource(), $permission->getPrivilege() );
+			}
+		}
+		return $acl;
 	}
 
 }

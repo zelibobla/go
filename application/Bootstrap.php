@@ -4,89 +4,118 @@
  * zelibobla@gmail.com
  *
  */
- 
+
+/**
+* instantiate system defaults, attach any necessary data, run
+* !warning: methods order has meaning, don't change it if not sure
+*/
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
 	/**
 	* define globals
+	* @return void
 	*/
 	protected function _initGlobals(){
-
+		
 		// salt part for good user passwords protection (another part is in DB)
-		Zend_Registry::set( 'static_salt', 'who_is_mr_golt' );
+		Zend_Registry::set( 'static_salt', 'here_we_go!' );
 
-		// DB tables prefixes
+		// init default basics
+		$defaults = $this->getOption( 'defaults' );
+		Zend_Registry::set( 'defaults', @$defaults );
+
+		// init database
 		$resources = $this->getOption( 'resources' );
 		Zend_Registry::set( 'prefix', @$resources[ 'db' ][ 'params' ][ 'prefix' ] );
-
-		// user (if logged in )
 		$this->bootstrap( 'db' );
+
+		// init application modules
 		$this->bootstrap( 'modules' );
+		
+		// init views
+		$this->bootstrap( 'view' );
+	
+	}
+	
+	/**
+	* define user even if not logged (see readme in application root folder for details )
+	* @return void
+	*/
+	protected function _initUser(){
 
+		/**
+		* if stored session exists
+		*/
 		$auth = Zend_Auth::getInstance();
-
-    if( $auth->hasIdentity() &&
-		true == ( $user = Go_Factory::getDbTable( 'User_Model_User' )->fetchByEmail( $auth->getIdentity() ) ) &&
-		true == $user->getId() ){
-		
-			Zend_Registry::set( 'user', $user );
-		// if session is exists but we couldn't retrieve user from DB:
-		} else {
-
-			$auth->clearIdentity();
-		
-		}
-		
-    	// if not logged, generate temporary user and login him automatically
-		if( false == $auth->hasIdentity() ) {
-			$password = Core_Plugin_Misc::generateRandomString( 6 );
-			$email = Core_Plugin_Misc::generateRandomString( 9 );
-			$user = new User_Model_User( array(
-				'email'			=> $email,
-				'name'			=> 'Инкогнито',
-				'role'			=> 'guest' ) );
-			$id = $user->generateRandomSalt()
-					   ->generatePasswordHash( $password )
-					   ->put();
-      		$user->setId( $id );
-			$adapter = Core_Plugin_Misc::getAuthAdapter()->setIdentity( $email )
-                                                   		 ->setCredential( $password );
-			$result = $auth->authenticate( $adapter );
-			if( false == $result->isValid() ){
-				throw new Exception( 'Unable to create and authenticate temporary user' );
+    	if( $auth->hasIdentity() ){
+			if( true == ( $user = User_Model_User::build( array( 'email' => $auth->getIdentity() ) ) ) ){
+				Zend_Registry::set( 'user', $user );
+				$user->setActiveAt( date( "Y-m-d H:i:s" ) )
+					 ->save();
+				return;
+			// if session is exists but we couldn't retrieve user from DB:
+			} else {
+				$auth->clearIdentity();
 			}
-			Zend_Registry::set( 'user', $user );
-			Core_Plugin_Voice::pleaseRegister();
 		}
-		$user->setDateLastActivity( 'now()' )
-			 ->put();
+
+		/**
+		* if user saved in cookies
+		*/
+		if( true == ( $hash = addslashes( $_COOKIE[ 'hash' ] ) ) &&
+		 	$user = User_Model_User::build( array( 'hash' => $hash ) ) ){
+			
+			$auth->getStorage()->write( $user->getEmail() );
+			$user->setActiveAt( date( "Y-m-d H:i:s" ) )
+				 ->save();
+			Zend_Registry::set( 'user', $user );
+			return;
+		}
+
+		/**
+		* if not logged, generate temporary user and login him automatically
+		*/
+		$password = Go_Misc::generateRandomString( 6 );
+		$email = Go_Misc::generateRandomString( 9 );
+		$user = new User_Model_User( array(	'email'			=> $email,
+											'name'			=> 'noname',
+											'role'			=> 'guest' ) );
+		$id = $user->generateRandomSalt()
+				   ->generatePasswordHash( $password )
+				   ->save();
+   		$user->setId( $id );
+		$adapter = Core_Plugin_Misc::getAuthAdapter()->setIdentity( $email )
+                                               		 ->setCredential( $password );
+
+		$result = $auth->authenticate( $adapter );
+		if( false == $result->isValid() ){
+			throw new Exception( 'Unable to create and authenticate temporary user' );
+		}
+		Zend_Registry::set( 'user', $user );
 	}
 
 	/**
-	* generate access rights table and put it in registry
+	* retrieve access rights table and put it in registry
+	* @return void
 	*/
 	protected function _initAcl(){
 
 		if( Zend_Auth::getInstance()->hasIdentity() ){
-		   Zend_Registry::set( 'acl', Core_Plugin_Acl::getAcl() );
+		   Zend_Registry::set( 'acl', Core_Plugin_Misc::getAcl() );
 		}
 	}
 
 	/**
-	* connecting XML structure of general menu
+	* pull XML structure of general menu
+	* @return void
 	*/
 	protected function _initNavigation(){
 
 		$menu_config = new Zend_Config_Xml( APPLICATION_PATH . '/configs/navigation.xml', 'nav' );
 
-		$this->bootstrap( 'view' );
-
 		if( Zend_Auth::getInstance()->hasIdentity() ){
-		   $acl = Core_Plugin_Acl::getAcl();
+		   $acl = Zend_Registry::get( 'acl' );
 		   $role = Zend_Registry::get( 'user' )->getRole();
-		} else {
-			$acl = null;
-			$role = null;
 		}
 
 		$this->view->navigation()->setAcl( $acl )
@@ -96,23 +125,59 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 	}
 	
 	/**
-	* connecting routes
+	* define routes
+	* @return void
 	*/
 	protected function _initRoutes(){
 
-		$front = Zend_Controller_Front::getInstance();
-		$router = $front->getRouter();
- 
-		$config = new Zend_Config_Ini( APPLICATION_PATH . '/configs/routes.ini', 'production' );      
-		$router->addConfig( $config,'routes' );
+		$router = Zend_Controller_Front::getInstance()->getRouter();
+		$config = new Zend_Config_Ini( APPLICATION_PATH . '/configs/routes.ini' );      
+		$router->addConfig( $config, 'routes' );
 	}
 
 	/**
-	* our default locale is Russian
+	* define locales
+	* @return void
 	*/
 	protected function _initLocale(){
-		setlocale( LC_ALL, 'ru_RU.UTF-8' );
+		try{
+			$settings = Zend_Registry::get( 'user' )->getSettings();
+			$locale = @$settings[ 'language' ];
+		} catch( Exception $e ){
+			$locale = 'en_EN';
+		}
+		if( false == $locale ) $locale = 'ru_RU';
+		setlocale( LC_ALL, $locale . '.UTF-8' );
+		Zend_Registry::set( 'locale', $locale );
 	}
 
+	/**
+	* init translation table for specified locale; so if different users uses different locales -
+	* several locale tables would be stored in cache, but only specified for current user will be emitted to js frontend
+	* 1. put it into cache;
+	* 2. put it into js file for frontend translations
+	* @return void
+	*/
+	public function _initTranslator(){
+		/**
+		* put translator into cache
+		*/
+//		$cache = Zend_Registry::get( 'cache' );
+//		if ( false == ( $translator = $cache->load( Zend_Registry::get( 'locale' ) ) ) ) {
+			$translator = new Core_Model_Translator( Zend_Registry::get( 'locale' ) );
+			Zend_Registry::set( 'translator', $translator );
+//		    $cache->save( $translator, Zend_Registry::get( 'locale' ) );
+//		}
+		/**
+		* emit translator data to js file for frontend purposes
+		*/
+		$js_file = APPLICATION_PATH . "/../public/js/translator.js";
+//		if( false == is_file( $js_file ) ||
+//		 	filemtime( $js_file ) < $translator->getTime() ){
+			$handler = fopen( $js_file, "w" );
+			fwrite( $handler, "translator = " . json_encode( $translator->getData() ) );
+			fclose( $handler );
+//		}
+	}
 }
 

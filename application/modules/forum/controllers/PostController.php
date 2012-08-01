@@ -63,7 +63,7 @@ class Forum_PostController extends Go_Controller_Action{
 		}
 
 		$post = new Forum_Model_Post( $data );
-		$id = $post->put();
+		$id = $post->save();
 		Forum_Plugin_Voice::postEdited( $post );
 		return $this->_helper->json( array( 'result' => true,
 														'id'=>$id,

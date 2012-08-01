@@ -4,35 +4,29 @@
  * zelibobla@gmail.com
  *
  */
-	
-	$this->headScript()->appendFile( '/js/uploader/client/fileuploader.js', 'text/javascript' )
-							 ->appendFile( '/js/jquery.imgareaselect-0.9.8/scripts/jquery.imgareaselect.pack.js', 'text/javascript' );
-	
-	$this->headLink()->appendStylesheet( '/js/uploader/client/fileuploader.css' )
-						  ->appendStylesheet( '/js/jquery.imgareaselect-0.9.8/css/imgareaselect-default.css' );
-
-	$u = $this->user;
+$u = $this->item;
 ?>
 <div class="user_profile">
-	<div class="user">
-		<h1>Ваш аккаунт</h1>
-		<ul class="properties_list">
+	<h1><?=sprintf( $this->t( 'user_profile_header' ), $u->__toString() )?></h1>
+	<ul class="properties_list">
+		<li>
+			<label></label>
+			<div><?=$this->icon( $u )?></div>
+		</li>
+		<li>
+			<label><?=$this->t( 'user_name' )?></label>
+			<div><?=$u?></div>
+		</li>
+		<? if( $u->getId() == $this->user->getId() ) :?>
 			<li>
 				<label></label>
-				<div><?=$this->icon( $u )?></div>
-			</li>
-			<li>
-				<label>Имя:</label>
-				<div><?=$u?></div>
+				<div><a href="<?=$this->url( array(), 'user_profile_edit' )?>"><?=$this->t( 'edit' )?></a></div>
 			</li>
 			<li>
 				<label></label>
-				<div>
-					<a href="<?=$this->url( array(), 'user_profile_edit' )?>">Изменить данные</a><br />
-					<a href="<?=$this->url( array(), 'user_change_password' )?>">Изменить пароль</a>
-				</div>
+				<div><a href="<?=$this->url( array(), 'user_change_password' )?>"><?=$this->t( 'user_change_password' )?></a></div>
 			</li>
-		</ul>
-	</div>
+		<? endif ?>
+	</ul>
 </div>
 <div class="clear"></div>

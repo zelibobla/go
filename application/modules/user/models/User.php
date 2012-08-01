@@ -14,112 +14,61 @@ class User_Model_User
 	protected $password_hash;
 	protected $password_salt;
 	protected $role;
-	protected $last_activity_at;
+	protected $active_at;
 	protected $settings;
+	protected $photo;
 
 	/**
-	* return icon filename
-	*
+	* return if self is editable for specified user
+	* @return boolean
 	*/
-	public function getIconPublicPath(){
-		$path = '/uploads/user/' . $this->getId() . '/' /*. $this->getLogo()*/;
-
-		if( false == $this->getId() ||
-//			 false == $this->getLogo() ||
-			 false == is_file( self::getStoragePath() . $this->getId() . '/' /*. $this->getLogo()*/ ) ){
-			return "/uploads/user/no_icon.jpg"; 
-		} else {
-			return $path;
-		}
+	public function isEditableFor( User_Model_User $user ){
+		return $user->getId() == $this->getId() ||
+			   Zend_Registry::get( 'acl' )->isAllowed( $user->getRole(), 'user', 'edit' );
 	}
 
 	/**
-	* return path to files storage
-	*
-	*/
-	public static function getStoragePath(){
-		return APPLICATION_PATH . '/../public/uploads/user/';
-	}
-
-	/**
-	* return is user linkable or not (depends of temporary field)
-	*
+	* return is user linkable or not
+	* @return boolean
 	*/
 	public function isLinkable(){
 		return 'guest' == $this->getRole() ? false : true;
 	}
-	
-	/**
-	 * return profile route name
-	 *
-	 */
-	public function getProfileRouteName(){
-		return 'user_profile';
-	}
 
 	/**
-	* the randomly generated part of salt for new user should be immediately stored in DB
-	*
+	* generate random string of four symbols and put it into self::password_salt field
+	* @return $this
 	*/
 	public function generateRandomSalt(){
-		$this->setPasswordSalt( Core_Plugin_Misc::generateRandomString( 4 ) );
+		$this->setPasswordSalt( Go_Misc::generateRandomString( 4 ) );
 		return $this;
 	}
 
 	/**
-	* get part of salt sotred in application bootstrap, concatenate it with password and part of salt stored in DB
-	* retrun md5 of result
-	* this is the best way to protect password even if one of DB or code will be compromited
-	*
+	* generate encrypted password and put encryption result to self::password_hash field
+	* !warning: you can use blank password to your own responsibility
+	* @param $password - string of password
+	* @return $this
 	*/
 	public function generatePasswordHash( $password ){
-		$string = Zend_Registry::get( 'static_salt' ) .
-					 $password .
-					 $this->getPasswordSalt();
-		$this->setPasswordHash( md5( $string ) );
+		$this->setPasswordHash( md5( Zend_Registry::get( 'static_salt' ) . $password . $this->getPasswordSalt() ) );
 		return $this;
 	}
 	
-	public function getEmail() {
-		return $this->email;
+	/**
+	* return icon filename counting from webroot folder
+	* @return string
+	*/
+	public function getIconWebPath(){
+		return "/uploads/account/{$this->getId()}/{$this->getPhoto()}";
 	}
-	public function setEmail( $value ) {
-		$this->email = $value;
-		return $this;
+
+	/**
+	* return path to files storage
+	* @return string
+	*/
+	public static function getStoragePath(){
+		return APPLICATION_PATH . "/../public/uploads/profile";
 	}
-	public function getPasswordHash() {
-		return $this->password_hash;
-	}
-	public function setPasswordHash( $value ) {
-		$this->password_hash = $value;
-		return $this;
-	}
-	public function getPasswordSalt() {
-		return $this->password_salt;
-	}
-	public function setPasswordSalt( $value ) {
-		$this->password_salt = $value;
-		return $this;
-	}
-	public function getRole(){
-		return $this->role;
-	}
-	public function setRole( $value ){
-		$this->role = $value;
-		return $this;
-	}
-	public function getLastActivityAt(){
-		return $this->last_activity_at;
-	}
-	public function setLastActivityAt( $value ){
-		$this->last_activity_at = $value;
-		return $this;
-	}
-	public function getSettings(){
-		return $this->settings;
-	}
-	public function setSettings( $value ){
-		$this->settings = $value;
-		return $this;
-	}
+
 }

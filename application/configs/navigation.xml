@@ -10,8 +10,14 @@
 		<users>
 			<label>Пользователи</label>
 			<route>users</route>
-			<resource>user_foreign</resource>
+			<resource>user</resource>
 			<privilege>edit</privilege>
 		</users>
+		<logout>
+			<label>Выход</label>
+			<route>logout</route>
+			<resource>profile</resource>
+			<privilege>logout</privilege>
+		</logout>
 	</nav>
 </config>

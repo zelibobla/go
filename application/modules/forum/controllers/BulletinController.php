@@ -19,13 +19,13 @@ class Forum_BulletinController extends Go_Controller_Item{
                     ->setEmail( $this->_form->getValue( 'email' ) )
                     ->setLogin( $this->_form->getValue( 'email' ) )
                     ->setRole( 'user' )
-                    ->put();
+                    ->save();
         $this->_user->savePhones( $this->_form->getValue( 'phone' ) );
 
         $password = Core_Plugin_Misc::generateRandomString( 6 );
         $this->_user->generateRandomSalt()
                     ->generatePasswordHash( $password )
-                    ->put();
+                    ->save();
 
         $auth = Zend_Auth::getInstance();
         $adapter = Core_Plugin_Misc::getAuthAdapter()->setIdentity( $this->_user->getLogin() )
@@ -42,7 +42,7 @@ class Forum_BulletinController extends Go_Controller_Item{
 
 		$this->_item->setOwnerId( $this->_user->getId() )
                 ->setCategoryId( Forum_Model_Bulletin::FORUM_CATEGORY_ID )
-                ->put();
+                ->save();
 
     Forum_Plugin_Voice::bulletinEdited( $this->_item, !$this->_item->getId() );
     return $this->_helper->json( array( 'result' => true ) );

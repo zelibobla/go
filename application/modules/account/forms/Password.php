@@ -11,29 +11,22 @@ class Account_Form_Password extends Go_Form {
 
 		$this->addElement( 'password', 'password', array(
 			'required'   => true,
-			'label'      => 'Новый пароль:',
-			'value'		 => ''
-		));
+			'label'      => $this->_( 'user_new_password' ),
+		) );
 
 		$this->addElement( 'password', 'password_repeat', array(
 			'required'   => true,
-			'label'      => 'Повтор нового пароля:',
-			'value'		 => ''
-		));
+			'label'      => $this->_( 'user_new_password_repeat' ),
+			'validators' => array( array( 'passwordConfirmation' ) )
+		) );
 		
 		$this->addElement( 'submit', 'submit', array(
-			'ignore'			=> true,
-			'label'			=> 'Сменить'
-		));
-
-		$this->getElement( 'password_repeat' )
-			  ->addPrefixPath( 'Go_Validate','Go/Validate','validate' )
-			  ->addValidator( 'passwordConfirmation' );
+			'ignore'	=> true,
+			'label'		=> $this->_( 'submit' )
+		) );
 
 		parent::init();
-		
-		$this->setAction( "/account/profile/password" )
-			  ->setAttrib( "id", "password_form" );
+		$this->setAction( "/account/profile/password" );
 	}
 }
 

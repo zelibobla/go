@@ -5,89 +5,85 @@
  *
  */ 
 
-class Account_ProfileController extends Go_Controller_Action {
+class Account_ProfileController extends Go_Controller_Crud {
+
+	protected $_item_class = "User_Model_User";
+	protected $_form_class = "Account_Form_Profile";
+	protected $_resource = "profile";
 
 	public function init(){
 		parent::init();
-		if( false == $this->_allowed( 'profile', 'edit' ) ){
-			Account_Plugin_Voice::notRegisteredYet();
+		if( false == $this->_isAllowed( 'profile', 'view' ) ){
+			$this->_notify( $this->_( 'core_voice_insufficient_privileges' ) );
 			return $this->_redirector->gotoRoute( array(), 'signup' );
 		}
 	}
 	
 	/**
-	 * show profile data
-	 *
-	 */
+	* show profile data
+	* own profile will be shown by default
+	*/
 	public function indexAction() {
+		if( false == ( $id = ( int ) $this->_request->getParam( 'id' ) ) ||
+		 	false == ( $user = User_Model_User::build( $id ) ) ){
+			$user = $this->_user;
+		}
+		$this->view->item = $user;
 	}
 	
 	/**
-	 * show edit profile data form or process this form if post data exists
-	 *
-	 */
+	* show edit profile data form or process this form if post income
+	*/
 	public function editAction() {
 		
-		$this->view->form = $form = new Account_Form_Profile( $this->_user->getId() );
+		$this->view->form = $form = new Account_Form_Profile( $this->_user );
 		if( false == $this->_request->isPost() ) return;
 		
 		if( false == $form->isValid( $data = $this->_request->getParams() ) ){
-			Account_Plugin_Voice::invalidData();
+			$this->_notify( 'core_voice_invalid_data' );
 			return;
+		}
+		
+		if( $this->_user->getId() != ( int ) $form->getValue( 'id' ) ){
+			$this->_notify( 'core_voice_insufficient_privileges' );
+			return $this->_redirector->gotoRoute( array(), 'user_profile' );
 		}
 
 		$this->_user->setOptions( $form->getValues() )
-					->put();
+					->save();
 
-		User_Plugin_Voice::edited( $this->_user );
+		if( true == ( $filename = $form->getValue( 'photo' ) ) ){
+			$this->_item = $this->_user;
+			$this->_placeFile( $filename, json_decode( stripslashes( $form->getValue( 'photo_selection' ) ), true ) );
+		}
+
+		$this->_notify( sprintf( $this->_( 'user_voice_edited' ), $this->_user->__toString() ) );
 		return $this->_redirector->gotoRoute( array(), 'user_profile' );
 	}
 
 	/**
-	 * show change password form or process this form if post data exists
-	 *
-	 */
+	* show change password form or process this form if post data exists
+	*/
 	public function passwordAction() {
 		
 		$this->view->form = $form = new Account_Form_Password();
 		if( false == $this->_request->isPost() ) return;
 		
 		if( false == $form->isValid( $data = $this->_request->getParams() ) ){
-			Account_Plugin_Voice::invalidData();
+			$this->_notify( $this->_( "core_voice_invalid_data" ) );
 			return;
 		}
 
-		$this->_user->generatePasswordHash( $form->getValue( 'password' ) )->put();
-		
-		// now authenticate him
-		$adapter = Core_Plugin_Misc::getAuthAdapter()->setIdentity( $this->_user->getLogin() )
-																	->setCredential( $form->getValue( 'password' ) );
-		$auth = Zend_Auth::getInstance();
-		$auth->clearIdentity();
-		$result = $auth->authenticate( $adapter );
-		if( false == $result->isValid() ){
-			throw new Exception( 'Unable to create and authenticate user' );
-		}
-		Zend_Registry::set( 'user', $this->_user );
+		$this->_user->generatePasswordHash( $form->getValue( 'password' ) )
+					->save();
 
-		User_Plugin_Voice::edited();
+		$this->_notify( sprintf( $this->_( 'user_voice_edited' ), $this->_user->__toString() ) );
 		return $this->_redirector->gotoRoute( array(), 'user_profile' );
 	}
-	
+
 	/**
-	* standalone photo upload handler (cause ajax doesn't support file uploads)
-	*
+	* disable profile delete by overriding parental action
 	*/
-	public function photoAction() {
-		// list of valid extensions, ex. array("jpeg", "xml", "bmp")
-		$allowedExtensions = array( 'jpg' );
-		// max file size in bytes
-		$sizeLimit = 10 * 1024 * 1024;
-
-		$uploader = new Go_FileUploader( $allowedExtensions, $sizeLimit );
-		$result = $uploader->handleUpload( APPLICATION_PATH . '/../public/uploads/user/');
-
-		return $this->_helper->json( $result );
-	}
+	public function deleteAction(){}
 }
 

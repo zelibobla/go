@@ -41,7 +41,7 @@ class Forum_TopicController extends Go_Controller_Action{
 		}
 		
 		$topic = new Forum_Model_Post( $form->getValues() );
-		$topic->put();
+		$topic->save();
 		
 		Forum_Plugin_Voice::topicEdited( $topic );
 		return $this->_helper->json( array( 'redirect' => $this->view->url( array( 'id' => $form->getValue( 'category_id' ) ), 'forum_category' ),

@@ -26,10 +26,10 @@ class Go_Factory {
 	*
 	*/
 	public static function reference(
-		$class_name,					// class name to instatiate db_table
+		$class_name,				// class name to instatiate db_table
 		array $params = array(),	// query params like order, limit and so on
-		$fetch = true,					// should we fetch query and return Zend_Db_Table_Rowset
-											// or not and Zend_Db_Table_Select will be returned (useful for pagination purposes)
+		$fetch = true,				// should we fetch query and return Zend_Db_Table_Rowset
+									// or not and Zend_Db_Table_Select will be returned (useful for pagination purposes)
 		$in_array  = false			// should we return result in array (rowset will be returned by default
 	){
 
@@ -68,81 +68,29 @@ class Go_Factory {
 		}
 	}
 
-	
 	/**
-	* well, there is a corelation between class name and represented by it table name in DB
-	* so let's get one from another
-	* return instance of Zend_Db_Table with defined _name and _rowclass parameters and 
+	* suggest Db_Table class name based on current class name (usually corresponding is viewable)
+	* @return string class name
 	*/
 	public static function getDbTable( $class_name ){
-//print( "class_name: " . $class_name . "<br /><br />" );
 
 		$temp = str_replace( '_Model', '_Model_DbTable', $class_name );
-		$db_table_class = self::plural( $temp );
+		$db_table_class = Go_Misc::plural( $temp );
 
 		$row_class = class_exists( $class_name ) ? $class_name : "Core_Model_Item";
-//print( "db_table_class: " . $db_table_class . "<br /><br />" );
-//print( "row_class: " . $row_class . "<br /><br />" );
+
 		if( !( class_exists( $db_table_class ) ) ){
 			$table_name = self::getTableName( $class_name );
-
-			$db_table = new Go_DbTable( array( 'name' => $table_name,
-														  'rowClass' => $row_class ) );
+			$db_table = new Go_Db_Table( array( 'name' => $table_name ) );
+			$db_table->setRowClass( $row_class );
 			return $db_table;
 		} else {
 			return new $db_table_class();
 		}
 	}
 	
-	public static function save( Core_Model_Item $obj ){
-		$data = $obj->getOptions();
-		$table = self::getDbTable( get_class( $obj ) );
-		$db = $table->getAdapter();
-		//$db->getProfiler()->setEnabled( true );
-		$config = array(
-			'table'    => $table,
-			'data'     => $data,
-			'readOnly' => false,
-			'stored'   => true
-		);
-		$primary_arr = $table->info( 'primary' );
-		$primary = $primary_arr[ 1 ];
-
-		if( false == $data[ $primary ] ){
-			$data[ $primary ] = null;
-			$config[ 'stored' ] = false;
-		}
-
-		$rowclass = $table->getRowClass();
-		$row = new $rowclass( $config );
-		$row->setFromArray( $data );
-//		if( $obj->getEmail() == 'asd@asd.ru' ){ var_dump( $row->getDistributerId() );exit();}
-		$row->save();
-		if( true == $row->$primary ){
-			return $row->$primary;
-		} else {
-			return $table->getAdapter()->getLastInstertId();
-		}
-	}
-	
 	public static function getTableName( $class_name ){
-	
-		return Zend_Registry::get( 'prefix' ) . self::plural( strtolower( str_replace( "_Model", "", $class_name ) ) );
-	}
-	
-	public static function plural( $word ){
-		$last_letter = substr( $word, strlen( $word ) - 1 );
-		$last_2_letters = substr( $word, strlen( $word ) - 2 );
-		if( $last_2_letters == "ss" ||
-			 $last_2_letters == "us" ){
-			return $word . "es";
-		} elseif( $last_letter == "s" ){
-			return $word;
-		} elseif( $last_letter == "y" ){
-			return substr( $word, 0, strlen( $word ) - 1 ) . "ies";
-		} else {
-			return $word . "s";
-		}
+		return Zend_Registry::get( 'prefix' ) . Go_Misc::plural( strtolower( str_replace( "_Model", "", $class_name ) ) );
 	}
 
 	public static function selectTuned( $class_name, $settings ){

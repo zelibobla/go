@@ -9,9 +9,12 @@ class Zend_View_Helper_Icon extends Zend_View_Helper_Abstract {
 
 	public $view;
 
-	public function icon(
-		Go_Interface_Iconable $item
-	) {
-		return '<img src="' . $item->getIconPublicPath() . '" alt="' . $item->__toString() . '" class="item_icon">';
+	/**
+	* return html code of icon
+	* @param $item – object with Go_Interface_Iconable interface
+	* @return string html code of icon picture
+	*/
+	public function icon( Go_Interface_Iconable $item ) {
+		return '<img src="' . $item->getIconWebPath() . '" alt="' . $item->__toString() . '" class="icon">';
 	}
 }

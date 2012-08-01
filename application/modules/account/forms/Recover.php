@@ -6,29 +6,22 @@
  */
 
 class Account_Form_Recover extends Go_Form {
-	
-	public function __construct(){
-		parent::__construct();
-	}
 
 	public function init() {
 
-		$this->addElement( 'text', 'term', array(
+		$this->addElement( 'text', 'email', array(
 			'required'   => true,
-			'label'      => 'Ваш адрес электронной почты:',
-			'value'		 => '',
+			'label'      => $this->_( 'user_email_to_recover' ),
 			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ) )
-		));
+		) );
 		
 		$this->addElement( 'submit', 'submit', array(
-			'ignore'			=> true,
-			'label'			=> 'Восстановить'
-		));
+			'ignore'		=> true,
+			'label'			=> $this->_( 'submit' )
+		) );
 
 		$this->setAction( "/account/recover" );
 		parent::init();
-	
-		$this->setAttrib( "id", "recover_form" );
 	}
 }
 

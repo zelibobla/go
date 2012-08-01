@@ -5,12 +5,11 @@
  *
  */
 
-class Account_LoginController extends Go_Controller_Action {
+class Account_LoginController extends Go_Controller_Default {
 
 	/**
-	 * bring back the login form or to process this form (authenticate user)
-	 *
-	 */
+	* bring back the login form or to process this form (authenticate user)
+	*/
 	public function indexAction() {
 
 		$temporary_user = $this->_user;
@@ -20,7 +19,7 @@ class Account_LoginController extends Go_Controller_Action {
 		}
 
 		if( false == $form->isValid( $data ) ) {
-			Account_Plugin_Voice::invalidData();
+			$this->_notify( $this->_( 'core_voice_invalid_data' ) );
 			return;
 		}
 
@@ -31,9 +30,12 @@ class Account_LoginController extends Go_Controller_Action {
 		$result  = $auth->authenticate( $adapter );
 
 		if( false == ( $result->isValid() ) ){
-			Account_Plugin_Voice::invalidLogin();
+			$this->_notify( $this->_( 'user_voice_not_found' ) );
 			return;
 		} else {
+			if( '1' == $form->getValue( 'remember' ) ){
+				setcookie( 'hash', $this->_user->getPasswordHash(), time() + 60 * 60 * 24 *30, '/' );
+			}
 			return $this->_redirector->gotoRoute( array(), 'home' );
 		}
 

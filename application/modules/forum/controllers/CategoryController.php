@@ -56,7 +56,7 @@ class Forum_CategoryController extends Go_Controller_Action{
 		}
 		
 		$category = new Forum_Model_Category( $form->getValues() );
-		$category->put();
+		$category->save();
 		
 		Forum_Plugin_Voice::categoryEdited( $category );
 		return $this->_helper->json( array( 'redirect' => $this->view->url( array(), 'forum' ),

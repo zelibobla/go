@@ -6,7 +6,7 @@
  */
 ?>
 <div class="users_layout">
-	<? if( count( $this->users ) ) :?>
+	<? if( count( $this->items ) ) :?>
 		<table>
 			<caption>Пользователи</caption>
 			<thead>
@@ -17,10 +17,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<? foreach( $this->users as $user ) :?>
-					<tr item_name="<?=$user->getName()?>" id="<?=$user->getId()?>">
-						<td><?=$user->getName()?></td>
-						<td><?=$user->getEmail()?></td>
+				<? foreach( $this->items as $i ) :?>
+					<tr item_name="<?=$i->getName()?>" id="<?=$i->getId()?>">
+						<td><?=$i->getName()?></td>
+						<td><?=$i->getEmail()?></td>
 						<td class="controls">
 							<button class="item">редактировать</button>
 							<button class="delete"><div class="icon"></div>удалить</button>
@@ -29,7 +29,7 @@
 				<? endforeach ?>
 			</tbody>
 		</table>
-		<?=$this->paginationControl( $this->users )?>
+		<?=$this->paginationControl( $this->items )?>
 	<? else : ?>
 		<h2>Пока что нет пользователей</h2>
 	<? endif ?>

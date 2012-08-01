@@ -7,22 +7,15 @@
 
 class Go_Form extends Zend_Form {
 
+	
+	protected $_item;
+	
+	public function __construct( $item = null ){
+		$this->_item = $item;
+		parent::__construct();
+	}
+
 	public function init(){
-
-		$translateValidators = array( 	Zend_Validate_NotEmpty::IS_EMPTY => 'Пожалуйста, заполните это поле',
-		                              	Zend_Validate_Regex::NOT_MATCH => 'Неверное значение',
-		                              	Zend_Validate_StringLength::TOO_SHORT => 'Пожалуйста введите слово не короче %min% знаков',
-		                              	Zend_Validate_StringLength::TOO_LONG => 'Пожалуйста введите слово не длиннее %max% знаков',
-		                              	Zend_Validate_EmailAddress::INVALID => 'Неверный email адрес',
-		                              	Zend_Validate_Alnum::NOT_ALNUM => "'%value%' должно содержать только числа и буквы",
-		                              	Zend_Validate_Alnum::STRING_EMPTY => "Это поле не может быть пустым",
-										Zend_Validate_EmailAddress::INVALID_FORMAT     => "'%value%' не может быть адресом электронной почты",
-										Zend_Validate_EmailAddress::INVALID_HOSTNAME   => "не существует такого доменного имени '%hostname%'",
-										Zend_Validate_EmailAddress::INVALID_LOCAL_PART => "не может быть такого субдомена '%localPart%'",
-									);
-
-		$translator = new Zend_Translate( 'array', $translateValidators );
-		Zend_Validate_Abstract::setDefaultTranslator( $translator );
 
 		$this->clearDecorators()
 			  ->setElementDecorators( array (
@@ -57,6 +50,22 @@ class Go_Form extends Zend_Form {
 					array( array( 'row' => 'HtmlTag' ), array( 'tag' => 'div', 'class' => 'row' ) )
 				 );
 			}
+		}
+
+		$this->addElementPrefixPath( 'Go_Validate_', 'Go/Validate', 'validate' );
+	}
+	
+	/**
+	* translate word be provided key or return key itself if no translator set or no value for key defined
+	* @param $key – string key to search for the value in translator
+	* @return string translation or key itself
+	*/
+	protected function _( $key ){
+		try{
+			$translator = Zend_Registry::get( 'translator' );
+			return $translator->_( $key );
+		} catch( Exception $e ){
+			return $key;
 		}
 	}
 }

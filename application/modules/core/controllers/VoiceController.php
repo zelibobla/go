@@ -5,42 +5,42 @@
  *
  */
 
-class Core_VoiceController extends Go_Controller_Action {
+/**
+* handle ajax requests of system messages
+*/
+class Core_VoiceController extends Go_Controller_Default {
 
 	public function preDispatch() {	
 		if( false == Zend_Auth::getInstance()->hasIdentity() ) {
-			// keep silence if nobody logged in; no any redirections
+			// keep silence if nobody logged in
 			exit();
 		}
 	}
 
 	/**
 	* emit messages addressed to currently logged in user
-	*
 	*/
 	public function utterAction() {
-		$this->_helper->layout->disableLayout();
-		$messages = Core_Plugin_Voice::getNotifications();
-		$result = array();
 
+		$messages = Core_Model_Notification::getDbTable()->fetchVisibleBy( array( 'user_id' => ( int ) $this->_user->getId() ) );
+		$result = array();
 		if( count( $messages ) ){
 			foreach( $messages as $message ){
-				$result[ $message->getId() ] = array( "class" => $message->getClass(),
-																  "body"	 => $message->getBody(),
-																  "subject" => $message->getSubject() );
+				$result[ $message->getId() ] = array( "class"	=> $message->getClass(),
+													  "body"	=> $message->getBody(),
+													  "subject" => $message->getSubject() );
 			}
 		}
 		return $this->_helper->json( array( 'messages' => $result ) );
 	}
 
 	/**
-	* after message was shown to user, we mark it as inactive
-	*
+	* mark specified message as inactive
 	*/
 	public function markreadAction(){
 		if( true == ( $id = ( int ) $this->_getParam( 'id' ) ) &&
-			 true == ( $message = Go_Factory::get( "Core_Model_Notification", $id ) ) ){
-			$message->setIsActive( 'N' )->put();
+			true == ( $message = Core_Model_Notification::build( $id ) ) ){
+			$message->setIsActive( 0 )->save();
 		}
 		return $this->_helper->json( array( 'result' => true ) );
 	}

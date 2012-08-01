@@ -5,6 +5,6 @@
  *
  */
 ?>
-<h1>Регистрация на сайте</h1>
+<h1><?=$this->t( 'user_signup_header' )?></h1>
 <?=$this->form?>
-<div>Если у вас уже есть аккаунт, пожалуйста, <a href="<?=$this->url( array(), 'login' )?>">войдите</a>.</div>
+<div><?=sprintf( $this->t( 'user_if_has_account' ), $this->url( array(), 'login' ) )?></div>

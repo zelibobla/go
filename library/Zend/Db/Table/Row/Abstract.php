@@ -341,7 +341,6 @@ abstract class Zend_Db_Table_Row_Abstract implements ArrayAccess, IteratorAggreg
         }
 
         $tableClass = get_class($table);
-//var_dump( $table );exit();
         if (! $table instanceof $this->_tableClass) {
             require_once 'Zend/Db/Table/Row/Exception.php';
             throw new Zend_Db_Table_Row_Exception("The specified Table is of class $tableClass, expecting class to be instance of $this->_tableClass");
@@ -351,8 +350,6 @@ abstract class Zend_Db_Table_Row_Abstract implements ArrayAccess, IteratorAggreg
         $this->_tableClass = $tableClass;
 
         $info = $this->_table->info();
-//var_dump( $this->_data );exit();
-//var_dump( $info[ 'cols' ] );print( "<br><br>" );var_dump( array_keys( $this->getOptions() ) );exit();
         if ($info['cols'] != array_keys($this->_data)) {
             require_once 'Zend/Db/Table/Row/Exception.php';
             throw new Zend_Db_Table_Row_Exception('The specified Table does not have the same columns as the Row');

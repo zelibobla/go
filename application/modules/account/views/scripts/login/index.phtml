@@ -5,8 +5,10 @@
  *
  */
 ?>
+
 <div class="login_layout">
-	<h1>Вход</h1>
+	<h1><?=$this->t( 'Application' )?></h1>
 	<?=$this->form?>
-	<div><a href="<?=$this->url( array(), 'recover' )?>">Забыли пароль</a>?</div>
+	<div><a href="<?=$this->url( array(), 'recover' )?>"><?=$this->t( 'user_forgot_password' )?></a>?</div>
+	<div><a href="<?=$this->url( array(), 'signup' )?>"><?=$this->t( 'user_signup' )?></a></div>
 </div>
