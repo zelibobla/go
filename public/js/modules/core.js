@@ -8,8 +8,13 @@ $( document ).ready( function() {
 	
 
 	/**
-	* let's run periodical check for any system messages
+	* run periodical check for any system messages
 	*/
 	$( document.body ).systemVoice();
 
+	/**
+	* bind smart edit item plugin to perform ajax items edit and delete
+	*/
+	var items_table = new Edit_Item({ translator: translator,
+		 							  handler: $( '#items_table' ) });
 });

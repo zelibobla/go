@@ -175,7 +175,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 //		if( false == is_file( $js_file ) ||
 //		 	filemtime( $js_file ) < $translator->getTime() ){
 			$handler = fopen( $js_file, "w" );
-			fwrite( $handler, "translator = " . json_encode( $translator->getData() ) );
+			$res = fwrite( $handler, "translator = " . json_encode( $translator->getData() ) );
 			fclose( $handler );
 //		}
 	}

@@ -20,14 +20,14 @@ $defaults = Zend_Registry::get( 'defaults' );
 	              				'href' => '/img/favicon.ico' ),
 	              				'PREPEND' );
 
-		$this->headScript()->prependFile( '/js/jquery.chosen/chosen.jquery.min.js', 'text/javascript' )
-						   ->prependFile( '/js/jquery.json/jquery.json-2.2.min.js', 'text/javascript' )
+		$this->headScript()->prependFile( '/js/jquery.json/jquery.json-2.2.min.js', 'text/javascript' )
 						   ->prependFile( '/js/jquery-ui-1.8.16.custom/js/jquery-ui-1.8.16.custom.min.js', 'text/javascript' )
 						   ->prependFile( '/js/jquery-ui-1.8.16.custom/js/jquery-1.6.2.min.js', 'text/javascript' )
 							 
 						   ->appendFile( '/js/modules/core.js', 'text/javascript' )
 						   ->appendFile( '/js/widgets/system_voice.js', 'text/javascript' )
-						   ->appendFile( '/js/widgets/edit_item.js', 'text/javascript' );
+						   ->appendFile( '/js/widgets/edit_item.js', 'text/javascript' )
+						   ->appendFile( '/js/translator.js', 'text/javascript' );
 
 		$request = Zend_Controller_Front::getInstance()->getRequest();
 		$module = $request->getModuleName();
@@ -65,7 +65,6 @@ $defaults = Zend_Registry::get( 'defaults' );
 			}
 		}
 		var core = new Core();
-		console.log( core.getRoute(), core.getUser(), core.getResource() );
 	</script>
 </head>
 <body>

@@ -102,5 +102,4 @@ class Go_Misc {
 			return null;
 		}
 	}
-
 }

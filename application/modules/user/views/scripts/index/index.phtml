@@ -5,33 +5,42 @@
  *
  */
 ?>
-<div class="users_layout">
-	<? if( count( $this->items ) ) :?>
-		<table>
-			<caption>Пользователи</caption>
-			<thead>
-				<tr>
-					<th>имя</th>
-					<th>email</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<? foreach( $this->items as $i ) :?>
-					<tr item_name="<?=$i->getName()?>" id="<?=$i->getId()?>">
-						<td><?=$i->getName()?></td>
-						<td><?=$i->getEmail()?></td>
-						<td class="controls">
-							<button class="item">редактировать</button>
-							<button class="delete"><div class="icon"></div>удалить</button>
-						</td>
-					</tr>
-				<? endforeach ?>
-			</tbody>
-		</table>
-		<?=$this->paginationControl( $this->items )?>
-	<? else : ?>
-		<h2>Пока что нет пользователей</h2>
+<? if( !count( $this->items ) ) :?>
+	<h2>Пока что нет пользователей</h2>
+<? else : ?>
+	<? if( !$this->no_layout ) :?>
+		<div class="users_layout">
+				<table id="items_table"
+					   resource="user"
+					   edit_url="/user/index/edit"
+					   delete_url="/user/index/delete"
+					   edit_class="item_edit"
+					   delete_class="item_delete">
+					<caption>Пользователи</caption>
+					<thead>
+						<tr>
+							<th>имя</th>
+							<th>email</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
 	<? endif ?>
-	<button class="item add"><div class="icon"></div>Добавить</button>
-</div>
+					<? foreach( $this->items as $i ) :?>
+						<tr item_name="<?=$i->getName()?>" item_id="<?=$i->getId()?>">
+							<td><?=$i->getName()?></td>
+							<td><?=$i->getEmail()?></td>
+							<td class="controls">
+								<button class="item_edit">редактировать</button>
+								<button class="item_delete"><div class="icon"></div>удалить</button>
+							</td>
+						</tr>
+					<? endforeach ?>
+	<? if( !$this->no_layout ) :?>
+					</tbody>
+				</table>
+				<?=$this->paginationControl( $this->items )?>
+			<button class="item_edit"><div class="icon"></div>Добавить</button>
+		</div>
+	<? endif ?>
+<? endif ?>

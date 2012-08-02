@@ -2,8 +2,9 @@
  * © Anton Zelenski 2012
  * zelibobla@gmail.com
  *
- * The Jquery plugin to edit core items or it children.
- * Plugin should be attached to any DOM element with specified id value.
+ * The class to handle items via ajax
+ * This table should also have 'resource', 'edit_url', 'delete_url', 'edit_class', 'delete_class' attributes
+ * like <table resource="user" edit_url="/user/index/edit" delete_url="user/index/delete" add_class="item_edit" delete_class="item_delete"
  * It listening for event 'click' of DOM elemets with specified class.
  * Once 'click' event triggered the dialog opens with form to edit item
  * accepted form throws to a server for continue processing on server side.
@@ -15,225 +16,169 @@
  *
  */
 
-(function( $ ){
-	
-		var settings = {};
-		var id = null;
-		var defaults = {
-			'add_edit_class'	: '.item',				// DOM elements to bind edit or add item event
-			'delete_class'		: '.delete',			// DOM elements to bind remove item event
-			'dialog_id'			: '#edit_item_window',	// id of DOM element will be created to fit a dialog
-			'form_id'			: '#item_form',			// id of form in dialog to submit if validation success
-			'edit_caption'		: 'Edit',				// name of dialog if item_id is found — mean item is editing
-			'add_caption'		: 'Add',				// name of dialog if no item_id found — mean item is adding
-			'waiting_message'	: '<img src="/img/ajax_loader_bar.gif">',		// what to show in dialog while it's content being loading
-			'get_form_url'		: '',					// what url should we use to retrieve dialog content
-			'delete_url'		: '',					// what url should we use to perform item delete
-			'window_width'		: 600,					// what dialog window width would we perefer
-			'window_height'		: 'auto',				// what dialog window height would we perefer
-			'window_position'	: [ 300, 50 ],			// so on with position plugin to attach it to retrieved form in dialog content
-			'on_dialog_load'	: null,
-			'on_form_success'	: null,
-			'debug'				: true
-		};
+var Edit_Item = function( options ){
 
-		var methods = {
+	if( !( options ) ||
+		!( options.handler ) ||
+		!( options.handler.length ) ) throw 'Edit_Item class can\'t be instantiated without handler of DOM element to attach to';
+
+	var o = options,
+		_translator = options.translator ? options.translator : {},						// translator associative array
+		_dialog = {
+			width: options.dialog_width ? parseInt( options.dialog_width ) : 600,		// dialog window width
+			height: options.dialog_height ? parseInt( options.dialog_height ) : 'auto', // dialog window height
+			position: options.dialog_position ? dialog_position : [ 300, 50 ],			// dialog window position
+		},
+		_waiting = options.waiting ? options.waiting : '<img src="/img/ajax_loader_bar.gif">',
+		_handler = options.handler,
+		_callbacks = {
+			onDialogLoad: 'function' == typeof options.onDialogLoad ? options.onDialogLoad : function(){},
+			onFormSuccess: 'function' == typeof options.onFormSuccess ? options.onFormSuccess : function(){},
+		},
+		_id = _handler.attr( 'id' ),
+		_resource = _handler.attr( 'resource' ),
+		_urls = {
+			edit: _handler.attr( 'edit_url' ),
+			delete: _handler.attr( 'delete_url'),
+		},
+		_classes = {
+			edit: _handler.attr( 'edit_class' ),
+			delete: _handler.attr( 'delete_class' ),
+		},
+		_self = this;
+
+	if( -1 != ( _id + _resource + _urls.edit + _urls.delete + _classes.edit + _classes.delete ).indexOf( 'undefined' ) )
+		throw 'Edit_Item class is attached to DOM element with unset attribs: id, resource, edit_url, delete_url, edit_class, delete_class';
+
+	/**
+	* open dialog to edit item, ask from server dialog content
+	* send to server submitted form and handle response
+	*/
+	var editItem = function( event ){
+		/**
+		* construct defaults
+		*/
+		var row = $( event.target ).parent().parent(),
+			table = row.parent(),
+			item_id = row.attr( 'item_id' ),
+			caption = item_id
+					? translator[ _resource + '_edit_caption' ]
+					: translator[ _resource + '_add_caption' ],
+			dialog_id = _id + '_item_dialog',
+			waiting = true;
+		if( !( item_id ) ) throw 'Can\'t detect item_id';
+
+		$( document.body ).append( '<div id="' + dialog_id + '"></div>' );
+		var dialog_handler = $( '#' + dialog_id );
+
+		/**
+		* retrieve dialog content
+		*/
+		var dialogLoadContent = function(){
+			$.ajax({
+				url: _urls.edit,
+				data: { id: item_id },
+				success: function( response ){
+					if( '' == response.html ||
+						'undefined' == typeof response.html ){
+						dialog_handler.dialog( 'close' );
+					}
+					dialog_handler.html( response.html );
+					waiting = false;
+					_callbacks.onDialogLoad();
+				}
+			});
+		}
 		
-			init : function( options ) {
-				
-				if( options ) {
-					var temp = {};
-					$.extend( temp, defaults );
-					$.extend( temp, options );
-				} else {
-					temp = defaults;
+		/**
+		* handle dialog submit
+		*/
+		var dialogSubmit = function(){
+			if( waiting ) return;
+			waiting = true;
+
+			$.ajax({
+				url: _urls.edit,
+				type: 'post',
+				data: dialog_handler.find( 'form' ).serialize(),
+				success: function( response ){
+					waiting = false;
+					/**
+					* server side validation success
+					*/
+					if( true == response.result ){
+						if( 'undefined' != typeof response.redirect ){
+							window.location = response.redirect;
+						} else {
+							dialog_handler.dialog( 'close' );
+							table.html( response.html );
+							_callbacks.onFormSuccess();
+						}
+					/**
+					* server side validation fault
+					*/
+					} else {
+						dialog_handler.html( response.html );
+						_callbacks.onDialogLoad();
+					}
 				}
-				id = this.attr( 'id' );
-				settings[ id ] = temp;
-				$( settings[ id ][ 'add_edit_class' ] ).bind( 'click', methods.load );
-				$( settings[ id ][ 'delete_class' ] ).bind( 'click', methods.del );
+			});
+		}
+
+		/**
+		* build dialog
+		*/
+		var dialogBuild = function(){
+			dialog_handler.dialog({
+				title: caption,
+				width: _dialog.width,
+				height: _dialog.height,
+				position: _dialog.position,
+				modal : true,
+				buttons : [
+					{
+						text : _translator.cancel,
+					  	click : function(){ $( this ).dialog( "close" ); }
+					},
+					{
+						text: _translator.submit,
+						click: function(){ dialogSubmit() }
+					}
+				]
+				}).html( _waiting )
+				  .dialog( 'open' );
+			dialogLoadContent();
+		}
+		
+		dialogBuild();
+	}
 	
-			},
-			
-			load : function( event ){
-				var id = methods.getInstanceIdByElement( event.target );
-				var item_params = new Object();
+	/**
+	* send request to delete item
+	* and handle response
+	*/
+	var deleteItem = function( event ){
+		var cell = $( event.target ).parent(),
+			row = cell.parent(),
+			item_id = row.attr( 'item_id' );
 
-				//get item parent attribs to sent it in request as params
-				$.each( $( event.target ).parent().parent()[ 0 ].attributes, function( index, attr ) {
-					item_params[ attr.name ] = ( attr.value );
-				});
-				
-				//override get item parent attribs by item attribs
-				$.each( $( event.target )[ 0 ].attributes, function( index, attr ) {
-					item_params[ attr.name ] = ( attr.value );
-				});
-				if( true == $( event.target ).hasClass( 'copy' ) ){
-					item_params[ 'copy' ] = true;
+		if( !( item_id ) ) throw 'Can\'t detect item_id';
+
+		cell.html( _waiting );
+
+		$.ajax({
+			url: _urls.delete,
+			data: { id: item_id },
+			success: function( response ){
+				if( true == response.result ){
+					row.remove();
+				} else {
+					cell.html( 'Some error happened. Deletion canceled.' );
 				}
-
-				var caption = item_params.id
-							? settings[ id ][ 'edit_caption' ] + " «" + item_params.item_name + "»"
-							: settings[ id ][ 'add_caption' ];
-				var dialog_id = settings[ id ][ 'dialog_id' ].substring( 1 );
-				$( document.body ).append( '<div id="' + dialog_id + '"></div>' );
-
-				$( settings[ id ][ 'dialog_id' ] ).dialog({
-					title: caption,
-					width: settings[ id ][ 'window_width' ],
-					height: settings[ id ][ 'window_height' ],
-					position : settings[ id ][ 'window_position' ],
-					buttons : {
-						'Отмена' : function(){
-							$( settings[ id ][ 'dialog_id' ] ).dialog( "close" );
-						},
-						'Готово' : function( event ){
-							// prevent double submit
-							if( false == $( settings[ id ][ 'dialog_id' ] ).dialog( 'option', 'disabled' ) ){
-								
-								var form = $( settings[ id ][ 'form_id' ] );
-								// if form is valid via JS, let's check server side validity
-								if( form.valid() ){
-									$( settings[ id ][ 'dialog_id' ] ).dialog( 'disable' );
-									if( settings[ id ][  'debug' ] ){
-										console.log( settings[ id ][ 'get_form_url' ] + '?' + form.serialize() );
-									}
-									$.ajax({
-										url: settings[ id ][ 'get_form_url' ],
-										type: 'post',
-										data: form.serialize(),
-										success: function( response ){
-											if( settings[ id ][  'debug' ] ){
-												console.log( response );
-											}
-											if( true == response.result ){
-												if( 'undefined' != typeof response.redirect ){
-													window.location = response.redirect;
-												} else {
-													$( settings[ id ][ 'dialog_id' ] ).dialog( 'enable' );
-													$( settings[ id ][ 'dialog_id' ] ).dialog( 'close' );
-													if( null != ( custom_function = settings[ id ][ 'on_form_success' ] ) ){
-														custom_function();
-													} else {
-                            							window.location.reload();
-													}
-												}
-											// if server side validation is fault bring back server rendered form with errors shown
-											} else {
-												$( settings[ id ][ 'dialog_id' ] ).dialog( 'enable' );
-												$( settings[ id ][ 'dialog_id' ] ).html( response.html );
-												if( null != ( custom_function = settings[ id ][ 'on_dialog_load' ] ) ){
-													custom_function( item_params );
-												}
-
-											}
-										}
-									});
-								}
-							}
-		  				}
-					},
-					modal : true
-				})
-				.html( settings[ id ][ 'waiting_message' ] )
-				.dialog( 'open' );
-
-				if( settings[ id ][  'debug' ] ){
-					console.log( settings[ id ][ 'get_form_url' ], item_params );
-				}
-				$.ajax({
-					url: settings[ id ][ 'get_form_url' ],
-					data: item_params,
-					success: function( response ){
-						if( settings[ id ][  'debug' ] ){
-							console.log( response );
-						}
-						if( '' == response.html ||
-							 'undefined' == typeof response.html ){
-							$( settings[ id ][ 'dialog_id' ] ).dialog( 'close' );
-						}
-						$( settings[ id ][ 'dialog_id' ] ).html( response.html );
-						if( null != ( custom_function = settings[ id ][ 'on_dialog_load' ] ) ){
-							custom_function( item_params );
-						}
-						if( true == item_params[ 'copy' ] ){
-							$( '#copied_from_id' ).val( $( '#id' ).val() );
-							$( '#id' ).val( '' );
-						}
-					}
-				});
-			},
-
-			del : function( event ){
-				var id = methods.getInstanceIdByElement( event.target );
-
-				event.item_id = $( event.target ).parent().parent().attr( 'id' );
-				if( undefined == event.item_id ){
-					throw 'No item_id specified';
-					return;
-				}
-				cell = $( event.target ).parent();
-				row = $( event.target ).parent().parent();
-				settings[ id ][ 'temp' ] = cell.html();
-				cell.html( settings[ id ][ 'waiting_message' ] );
-
-				$.ajax({
-					url: settings[ id ][ 'delete_url' ],
-					method: "post",
-					data: {
-						'id': event.item_id
-					},
-					success: function( response ){
-						if( settings[ id ][  'debug' ] ){
-							console.log( response );
-						}
-						if( true == response.result ){
-							row.remove();
-						} else {
-							cell.html( 'Some error happened. Delete not performed.' );
-						}
-					}
-				});
-			},
-			
-			getInstanceIdByElement : function( element ){
-				classes = $( element ).attr( 'class' ).split( ' ' );
-				class_name = "." + classes[ 0 ];
-
-				$.each( settings, function( key, values ){
-
-					$.each( values, function( index, value ){
-
-						if( ( index == 'add_edit_class' ||
-								index == 'delete_class' ) &&
-							 class_name == value ){
-
-							result = key;
-//							console.log( '['+key+']['+index+']:\''+value+'\' == \''+class_name+'\' — GOT IT!' );
-							return false;
-						} else {
-//							console.log( '['+key+']['+index+']:\''+value+'\' != \''+class_name+'\'' );
-						}
-					});
-				});
-				if( 'undefined' == typeof result ) throw 'Can\'t detect plugin-instance-owner of this clicked element; check the binding';
-				//console.log( result );
-				return result;
 			}
+		});		
+	}
 
-		};
-
-		$.fn.editItem = function( method ) {
-
-			// Method calling logic
-			if ( methods[ method ] ) {
-				return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-			} else if ( typeof method === 'object' || !method ) {
-				return methods.init.apply( this, arguments );
-			} else {
-				$.error( 'Method ' +  method + ' does not exist on jQuery.editItem' );
-			}    
-
-	 	};
-
-})( jQuery );
+	$( '.' + _classes.edit ).bind( 'click', editItem );
+	$( '.' + _classes.delete ).bind( 'click', deleteItem );
+}

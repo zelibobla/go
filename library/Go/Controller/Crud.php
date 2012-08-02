@@ -101,16 +101,18 @@ class Go_Controller_CRUD extends Go_Controller_Default {
 	* perform editing or adding item
 	*/
 	public function editAction() {
-		$item_class = $this->item_class; 
+		$item_class = $this->_item_class; 
 
-		if( false == $this->_allowed( $this->_resource, 'edit' ) ){
+		if( false == $this->_isAllowed( $this->_resource, 'edit' ) ){
 			$this->_notify( $this->_( 'core_voice_insufficient_privileges' ) );
 			return $this->afterFaultEdit();
 		}
 		
-		$id = ( int ) $this->_request->getParam( 'id' );
-
-		$this->_form = $form = new $this->_form_class( $id );
+		if( false == ( $id = ( int ) $this->_request->getParam( 'id' ) ) ||
+			false == ( $item = $item_class::build( $id ) ) ){
+			$item = new $this->_item_class();
+		}
+		$this->_form = $form = new $this->_form_class( $item );
 		
 		if( false == ( $data = $this->_request->getPost() ) ){
 			return $this->afterFaultEdit();
@@ -121,12 +123,8 @@ class Go_Controller_CRUD extends Go_Controller_Default {
 			return $this->afterFaultEdit();
 		}
 
-		if( false == $id ||
-			false == ( $item = $item_class::build( $id ) ) ){
-			$item = new $this->_item_class();
-		}
-
-		$this->_item = $item->setOptions( Go_Misc::sanitize( $form->getValues() ) )
+		$item = $item ?: new $this->_item_class();
+		$this->_item = $item->setOptions( $form->getValues() )
 							->setUpdatedAt( date( "Y-m-d H:i:s" ) );
 
 		$this->beforeSuccessEdit();
@@ -141,8 +139,10 @@ class Go_Controller_CRUD extends Go_Controller_Default {
 	protected function beforeSuccessEdit(){}
 
 	protected function afterSuccessEdit(){
-		$action = $this->_resource == $this->_module ? "edited" : Go_Misc::underscoreToCamel( $this->_resource ) . "Edited";
-	    return $this->_helper->json( array( 'result' => true ) );
+		$this->indexAction();
+		$this->view->no_layout = true;
+		$html = $this->view->render( 'index/index.phtml' );
+	    return $this->_helper->json( array( 'result' => true, 'html' => $html ) );
 	}
 
 	/**
@@ -158,7 +158,7 @@ class Go_Controller_CRUD extends Go_Controller_Default {
 			$this->_notify( $this->_( 'core_voice_invalid_data' ) );
 			return $this->_helper->json( array( 'result' => false ) );
 
-		} elseif( false == $this->_allowed( $this->_resource, 'edit' ) ){
+		} elseif( false == $this->_isAllowed( $this->_resource, 'edit' ) ){
 
 			$this->_notify( $this->_( 'core_voice_insufficient_privileges' ) );
 			return $this->_helper->json( array( 'result' => false ) );
