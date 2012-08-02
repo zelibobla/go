@@ -21,6 +21,7 @@ class Core_Plugin_Voice extends Zend_Controller_Plugin_Abstract {
 		foreach( $to as $user ){
 			if( false == $user instanceof User_Model_User ||
 			 	false == $user->getId() ) continue;
+
 			$message = new Core_Model_Notification( array( 'owner_id' => $user->getId(),
 			 											   'body' => $body,
 			 											   'subject' => $subject,

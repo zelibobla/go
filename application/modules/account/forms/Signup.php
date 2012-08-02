@@ -12,15 +12,15 @@ class Account_Form_Signup extends Go_Form {
 		$this->addElement( 'text', 'name', array(
 			'required'   => true,
 			'label'      => $this->_( 'user_name' ),
-			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ),
-			 					   array( 'uniqueLogin' ) )
+			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ) )
 		) );
 
 		$this->addElement( 'text', 'email', array(
 			'required'   => true,
 			'label'      => $this->_( 'user_email' ),
 			'validators' => array( array( 'stringLength', false, array( 6, 64 ) ),
-								   array( 'emailAddress', true ) )
+								   array( 'emailAddress', true ),
+								   array( 'uniqueLogin' ) )
 		) );
 
 		$this->addElement( 'password', 'password', array(

@@ -6,43 +6,30 @@
  */
 
 class User_Form_Password extends Go_Form {
-	
-	protected $_user;
-	
-	public function __construct( $id = null ){
-		if( false == $id ||
-			 false == ( $this->_user = Go_Factory::get( "User_Model_User", $id ) ) ){
-			$this->_user = new User_Model_User();
-		}
-		parent::__construct();
-	}
 
 	public function init() {
-
-		if( false == $this->_user->getLogin() ){
+		if( false == $this->_item->getLogin() ){
 			throw new Exception( 'Can\'t change password for unknown user' );
 		}
 
 		$this->addElement( 'hidden', 'user_id', array(
-			'value'      => $this->_user->getLogin(),
+			'value'      => $this->_item->getLogin(),
+			'filters' => array( array( 'int' ) )
 		));
 
 		$this->addElement( 'password', 'password', array(
 			'required'   => true,
-			'label'      => 'Password:',
-			'value'		 => ''
+			'label'      => $this->_( 'user_password' ),
+			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ) )
 		));
 
 		$this->addElement( 'password', 'password_repeat', array(
 			'required'   => true,
-			'label'      => 'Repeat password:',
-			'value'		 => ''
+			'label'      => $this->_( 'user_password' ),
+			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ) )
 		));
 
 		parent::init();
-		
-		$this->setAction( "/user/index/change_password" )
-			  ->setAttrib( "id", "password_form" );
 	}
 }
 

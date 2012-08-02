@@ -14,26 +14,29 @@ class User_Form_User extends Go_Form {
 		$this->addElement( 'text', 'name', array(
 			'required'   => true,
 			'label'      => $this->_( 'user_name' ),
-			'value'		 => $this->_item->getName(),
-			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ) )
-		));
+			'value'		 => stripslashes( html_entity_decode( $this->_item->getName() ) ),
+			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ) ),
+			'filters'	 => array( array( 'stripTags' ) )
+		) );
 
 		$this->addElement( 'text', 'email', array(
 			'required'   => true,
 			'label'      => $this->_( 'user_email' ),
 			'value'		 => $this->_item->getEmail(),
-			'validators' => array( array( 'stringLength', false, array( 6, 64 ) ),
-								   array( 'emailAddress', true ) )
+			'validators' => array( array( 'emailAddress', true ),
+								   array( 'uniqueLogin' ) )
 		));
 
 		$this->addElement( 'password', 'password', array(
 			'required'   => !( bool ) $this->_item->getId(),
-			'label'      => $this->_( 'user_new_password' )
+			'label'      => $this->_( 'user_new_password' ),
+			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ) )
 		));
 
 		$this->addElement( 'password', 'password_repeat', array(
 			'required'   => !( bool ) $this->_item->getId(),
 			'label'      => $this->_( 'user_new_password_repeat' ),
+			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ) )
 		));
 
 		$this->addElement( 'select', 'role', array(

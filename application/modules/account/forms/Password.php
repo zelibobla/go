@@ -12,12 +12,14 @@ class Account_Form_Password extends Go_Form {
 		$this->addElement( 'password', 'password', array(
 			'required'   => true,
 			'label'      => $this->_( 'user_new_password' ),
+			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ) )
 		) );
 
 		$this->addElement( 'password', 'password_repeat', array(
 			'required'   => true,
 			'label'      => $this->_( 'user_new_password_repeat' ),
-			'validators' => array( array( 'passwordConfirmation' ) )
+			'validators' => array( array( 'passwordConfirmation' ),
+								   array( 'stringLength', false, array( 3, 64 ) ) )
 		) );
 		
 		$this->addElement( 'submit', 'submit', array(

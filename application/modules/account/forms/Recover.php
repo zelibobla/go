@@ -12,7 +12,9 @@ class Account_Form_Recover extends Go_Form {
 		$this->addElement( 'text', 'email', array(
 			'required'   => true,
 			'label'      => $this->_( 'user_email_to_recover' ),
-			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ) )
+			'validators' => array( array( 'stringLength', false, array( 3, 64 ) ),
+			 					   array( 'emailAddress', true ) ),
+			'filters'	 => array( array( 'stripTags' ) )
 		) );
 		
 		$this->addElement( 'submit', 'submit', array(
