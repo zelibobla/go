@@ -15,6 +15,7 @@ $( document ).ready( function() {
 	/**
 	* bind smart edit item plugin to perform ajax items edit and delete
 	*/
-	var items_table = new Edit_Item({ translator: translator,
-		 							  handler: $( '#items_table' ) });
+	if( $( '#items_table' ).length )
+		var items_table = new Edit_Item({ translator: translator,
+			 							  handler: $( '#items_table' ) });
 });

@@ -29,7 +29,7 @@ var Edit_Item = function( options ){
 			height: options.dialog_height ? parseInt( options.dialog_height ) : 'auto', // dialog window height
 			position: options.dialog_position ? dialog_position : [ 300, 50 ],			// dialog window position
 		},
-		_waiting = options.waiting ? options.waiting : '<img src="/img/ajax_loader_bar.gif">',
+		_waiting = options.waiting ? options.waiting : '<img src="/css/ajax_loader_bar.gif">',
 		_handler = options.handler,
 		_callbacks = {
 			onDialogLoad: 'function' == typeof options.onDialogLoad ? options.onDialogLoad : function(){},
@@ -59,14 +59,13 @@ var Edit_Item = function( options ){
 		* construct defaults
 		*/
 		var row = $( event.target ).parent().parent(),
-			table = row.parent(),
 			item_id = row.attr( 'item_id' ),
+			table = item_id ? row.parent() : $( event.target ).parent().find( 'table').find( 'tbody' ),
 			caption = item_id
 					? translator[ _resource + '_edit_caption' ]
 					: translator[ _resource + '_add_caption' ],
 			dialog_id = _id + '_item_dialog',
 			waiting = true;
-		if( !( item_id ) ) throw 'Can\'t detect item_id';
 
 		$( document.body ).append( '<div id="' + dialog_id + '"></div>' );
 		var dialog_handler = $( '#' + dialog_id );

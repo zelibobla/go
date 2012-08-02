@@ -63,7 +63,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 		* if user saved in cookies
 		*/
 		if( true == ( $hash = addslashes( $_COOKIE[ 'hash' ] ) ) &&
-		 	$user = User_Model_User::build( array( 'hash' => $hash ) ) ){
+		 	$user = User_Model_User::build( array( 'password_hash' => $hash ) ) ){
 			
 			$auth->getStorage()->write( $user->getEmail() );
 			$user->setActiveAt( date( "Y-m-d H:i:s" ) )
@@ -178,6 +178,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 			$res = fwrite( $handler, "translator = " . json_encode( $translator->getData() ) );
 			fclose( $handler );
 //		}
+	}
+
+	/**
+	* read settings and put it into registry
+	* remove from Db inactive guests (once per day)
+	* @return void
+	*/
+	public function _initSettings(){
+		$settings = new Core_Model_Settings();
+		Zend_Registry::set( 'settings', $settings );
+		if( time() - $settings->getClearedAt() < 24 * 60 * 60 ) return;
+
+		$time = date( "Y-m-d H:i:s", time() - 24 * 60 * 60 );
+		User_Model_User::getDbTable()->removeGuestsInactiveFrom( $time );
+		$settings->setClearedAt( time() )->save();
 	}
 }
 

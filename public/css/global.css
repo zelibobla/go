@@ -5,8 +5,8 @@
  */
 
 /**
- * General staff
- */
+* General staff
+*/
 @charset "utf-8";
 
 
@@ -26,33 +26,25 @@ h1, h2, h3, h4 {
 	line-height: 130%;
 }
 
-a{
-	color: #55f;
-}
-
-a:visited{
-	color: #558;
-}
-
-a.local{
-	text-decoration: none;
-}
-
 img {
 	border: none;
 }
+
 ul{
 	list-style-type: none;
 }
+
 .local {
 	cursor: pointer;
 	border-bottom: 1px dotted #000;
-	color: #55f;
+	text-decoration:none;
 }
+
 .item_icon{
 	border: 5px solid #eee;
 	width: 200px; height: 200px;
 }
+
 .item_thumbnail{
 	border: 3px solid #eee;
 	width: 30px; height: 30px;
@@ -63,9 +55,8 @@ ul{
 }
 
 /**
- * Technical staff to make footer always in the bottom of page
- *
- */
+* Technical staff to make footer always in the bottom of page
+*/
 .wrapper{
 	min-height: 100%;
 	height: auto !important;
@@ -84,56 +75,34 @@ ul{
 	padding: 20px 0px 0px 380px;
 	margin: 0px;
 	color: #fff;
-	background: #335;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #067), color-stop(1, #055) );
 }
 .footer a {
 	color:#aaa;
 }
 
-
 /**
- * Intro page
- *
- */
-.intro{
-	min-height: 300px;
-	width: 100%;
-	margin: 100px 0px 0px 300px;
-}
-.intro .big_title{
-	font-size: 50px;
-	padding: 20px 0px 0px 35px;
-	color: #bbb;
-}
-.intro .central_column {
-	width: 350px;
-	padding: 50px 20px;
-}
-
-/**
- * Menu layout
- *
- */
+* Menu layout
+*/
 .menu{
 	width:100%;
 	position: fixed; left: 0px; top: 0px;
-	background: white;
-	-webkit-box-shadow: 0 0 20px gray;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #5af), color-stop(1, #5ab) );
+}
+.menu, .menu a{
+	color: #fff;
 }
 .menu .user_name{
 	margin: 20px 20px;
 	float: left;
 }
-.menu .logout{
-	margin: 20px 20px;
-	text-align: right;
-}
-.menu ul.navigation {
-	float: left;
-}
 .menu ul.navigation > li {
 	float:left;
 	cursor: pointer;
+}
+.menu ul.navigation > li.logout{
+	font-size: 12px;
+	float: right;
 }
 .menu ul.navigation > li .menu_item{
 	padding: 6px 24px;
@@ -161,14 +130,11 @@ ul{
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
 	background-color:#378de5;
 }
-.menu ul.navigation > li .menu_item a{
-	font-size: 14px;
-}
 .menu ul.navigation > li .menu_item .icon_home{
 	width: 16px; height:16px;
 	margin: 1px;
-	background-image: url(global-neutral-sprite.png);
-	background-position: -0px -112px;
+	background-image: url(sprite.png);
+	background-position: -128px -32px;
 }
 .menu ul.navigation > li ul{
 	padding: 0px; margin: 0px 24px;
@@ -197,28 +163,12 @@ ul{
 	background-color:#378de5;
 }
 
-
 /**
- * Auxilary menu layout
- *
- */
-.menu ul.auxilary_menu {
-	position: absolute; right: 0px; top: 0px;
-}
-.menu ul.auxilary_menu li{
-	float: left;
-	padding: 6px 24px;
-	cursor: pointer;
-}
-
-/**
-* paginator settings
-*
+* Paginator layout
 */
 .paginator{
 	font-size: 15px;
-	padding: 10px;
-	margin: 20px 0px;
+	padding: 10px; margin: 20px 0px;
 }
 .paginator .element{
 	float: left;
@@ -229,10 +179,8 @@ ul{
 }
 
 /**
- *	Generic table layout
- *
- */
-table{}
+*	Generic table layout
+*/
 table caption{
 	text-align: left;
 	font-size: 20px;
@@ -243,31 +191,31 @@ table th{
 	font-weight: normal;
 	font-style: italic;
 	padding: 2px 10px;
-	color: #88a;
-	border-bottom: 1px solid #eef;
+	color: #5af;
+	border-bottom: 1px solid #def;
 }
 table td{
 	padding: 10px 10px;
-	height: 29px;
+	height: 20px;
 }
 table tbody td{
 	vertical-align:top;
 }
 table tbody tr .controls{
 	display: none;
+	padding: 5px;
 }
-table tbody tr:hover{
-	background: #f9f9f9;
+table tbody tr:hover > td{
+	background: #fafdff;
 }
-table tbody tr:hover .controls{
+table tbody tr:hover > td.controls{
 	display: block;
+	background: #fff;
 }
 
 /**
- * Generic form layout
- *
- */
-form{}
+* Generic form layout
+*/
 form legend{
 	padding-left: 20px;
 	font-size: 1.2em;
@@ -290,11 +238,24 @@ form textarea{
 	width: 300px;
 	height: 100px;
 }
+/* Zend form validator will emit errors in ul */
+form ul.errors{
+	clear: both;
+	font-size: 10px;
+	line-height: 13px;
+	padding: 0px;
+	margin :0px;
+	color: red;
+}
+
+/**
+* buttons layout
+*
 button, input[ type = submit ] {
 		-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
 		-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
 		box-shadow:inset 0px 1px 0px 0px #ffffff;
-		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fff), color-stop(1, #eee) );
 		background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
 		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
 		background-color:#ededed;
@@ -310,7 +271,60 @@ button, input[ type = submit ] {
 		text-shadow:1px 1px 0px #ffffff;
 }
 button:hover, input[ type = submit ]:hover {
-		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #eee), color-stop(1, #fff) );
+		background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+		background-color:#dfdfdf;
+}
+*/
+/*
+button, input[ type = submit ] {
+	display:inline-block;
+	color:#777777;
+	font-size:13px;
+	padding:4px 20px;
+	text-decoration:none;
+	background: none;
+	border: none;
+}
+button:hover, input[ type = submit ]:hover {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-size:13px;
+	padding:4px 20px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #eee), color-stop(1, #fff) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+	cursor: pointer;
+}*/
+button, input[ type = submit ] {
+		-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+		-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+		box-shadow:inset 0px 1px 0px 0px #ffffff;
+		background: none;
+		-moz-border-radius:6px;
+		-webkit-border-radius:6px;
+		border-radius:6px;
+		border:1px solid #f3f3f3;
+		display:inline-block;
+		color:#777777;
+		font-size:13px;
+		padding:4px 20px;
+		text-decoration:none;
+		text-shadow:1px 1px 0px #ffffff;
+}
+button:hover, input[ type = submit ]:hover {
+		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #eee), color-stop(1, #fff) );
 		background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
 		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
 		background-color:#dfdfdf;
@@ -326,16 +340,16 @@ button .icon{
 	background-repeat: no-repeat;
 }
 button.add .icon{
-	background-image: url(global-go-sprite.png);
-	background-position: 0px -192px;
+	background-image: url(sprite.png);
+	background-position: -32px -64px;
 }
 button.edit .icon{
-	background-image: url(global-neutral-sprite.png);
-	background-position: -176px -112px;
+	background-image: url(sprite.png);
+	background-position: -192px -16px;
 }
 button.delete .icon{
-	background-image: url(global-warning-sprite.png);
-	background-position: -32px -192px;
+	background-image: url(sprite.png);
+	background-position: -112px -16px;
 }
 label.error{
 	clear: both;
@@ -344,19 +358,9 @@ label.error{
 	padding: 10px 3px;
 	color: red;
 }
-/* Zend form validator will emit errors in ul */
-form ul.errors{
-	clear: both;
-	font-size: 10px;
-	line-height: 13px;
-	padding: 0px;
-	margin :0px;
-	color: red;
-}
 
 /**
 * Generic system notifications layout
-*
 */
 .system_voice{
 	position: fixed;
@@ -382,7 +386,7 @@ form ul.errors{
 	border: solid 5px #afa;
 }
 .system_voice.neutral{
-	border: solid 5px #aaf;
+	border: solid 5px #5ae;
 }
 .system_voice.warning{
 	border: solid 5px #ffa;
@@ -390,7 +394,6 @@ form ul.errors{
 
 /**
 * Generic properties list such an user profile for example
-*
 */
 ul.properties_list{
 	margin: 10px 0px; padding: 0px;

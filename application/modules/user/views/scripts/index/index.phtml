@@ -21,7 +21,7 @@
 						<tr>
 							<th>имя</th>
 							<th>email</th>
-							<th></th>
+							<td></td>
 						</tr>
 					</thead>
 					<tbody>
@@ -31,8 +31,8 @@
 							<td><?=$i->getName()?></td>
 							<td><?=$i->getEmail()?></td>
 							<td class="controls">
-								<button class="item_edit">редактировать</button>
-								<button class="item_delete"><div class="icon"></div>удалить</button>
+								<button class="item_edit edit"><div class="icon"></div></button>
+								<button class="item_delete delete"><div class="icon"></div></button>
 							</td>
 						</tr>
 					<? endforeach ?>
@@ -40,7 +40,7 @@
 					</tbody>
 				</table>
 				<?=$this->paginationControl( $this->items )?>
-			<button class="item_edit"><div class="icon"></div>Добавить</button>
+			<button class="item_edit add"><div class="icon"></div></button>
 		</div>
 	<? endif ?>
 <? endif ?>

@@ -14,13 +14,14 @@ if( count( $this->container ) ){
 		if( true == ( $resource = $page->getResource() ) &&
 			true == ( $privilege = $page->getPrivilege() ) &&
 			false == $acl->isAllowed( $role, $resource, $privilege ) ) continue;
-		$class = $page->getRoute() == $current_route ? "active" : "";
+		$route = $page->getRoute();
+		$class = $route == $current_route ? "active " . $route : $route;
 		$menu_item = '';
 		$submenu = '';
 		$show_submenu = false;
-		if( 'home' == $page->getRoute() ){
-			$menu_item = '<a href="' . $this->url( array(), 'home' ) . '"><div class="icon_home"></div></a>';
-		} elseif( 'active' == $class ) {
+		if( 'home' == $route ){
+			$menu_item = '<a href="' . $this->url( array(), $route ) . '"><div class="icon_' . $route . '"></div></a>';
+		} elseif( false !== strpos( $class, 'active' ) ) {
 			$menu_item = $page;
 		} else {
 			$menu_item = $this->menu()->htmlify( $page );
