@@ -27,7 +27,7 @@ var Edit_Item = function( options ){
 		_dialog = {
 			width: options.dialog_width ? parseInt( options.dialog_width ) : 600,		// dialog window width
 			height: options.dialog_height ? parseInt( options.dialog_height ) : 'auto', // dialog window height
-			position: options.dialog_position ? dialog_position : [ 300, 50 ],			// dialog window position
+			position: options.dialog_position ? dialog_position : [ 300, 100 ],			// dialog window position
 		},
 		_waiting = options.waiting ? options.waiting : '<img src="/css/ajax_loader_bar.gif">',
 		_handler = options.handler,
@@ -58,7 +58,9 @@ var Edit_Item = function( options ){
 		/**
 		* construct defaults
 		*/
-		var row = $( event.target ).parent().parent(),
+		var row = $( event.target ).hasClass( 'icon' )
+				? $( event.target ).parent().parent().parent()
+				: $( event.target ).parent().parent(),
 			item_id = row.attr( 'item_id' ),
 			table = item_id ? row.parent() : $( event.target ).parent().find( 'table').find( 'tbody' ),
 			caption = item_id
@@ -157,7 +159,7 @@ var Edit_Item = function( options ){
 	* and handle response
 	*/
 	var deleteItem = function( event ){
-		var cell = $( event.target ).parent(),
+		var cell = $( event.target ).hasClass( 'icon' ) ? $( event.target ).parent().parent() : $( event.target ).parent(),
 			row = cell.parent(),
 			item_id = row.attr( 'item_id' );
 

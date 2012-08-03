@@ -250,68 +250,12 @@ form ul.errors{
 
 /**
 * buttons layout
-*
-button, input[ type = submit ] {
-		-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
-		-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
-		box-shadow:inset 0px 1px 0px 0px #ffffff;
-		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fff), color-stop(1, #eee) );
-		background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
-		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
-		background-color:#ededed;
-		-moz-border-radius:6px;
-		-webkit-border-radius:6px;
-		border-radius:6px;
-		border:1px solid #dcdcdc;
-		display:inline-block;
-		color:#777777;
-		font-size:13px;
-		padding:4px 20px;
-		text-decoration:none;
-		text-shadow:1px 1px 0px #ffffff;
-}
-button:hover, input[ type = submit ]:hover {
-		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #eee), color-stop(1, #fff) );
-		background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
-		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
-		background-color:#dfdfdf;
-}
 */
-/*
-button, input[ type = submit ] {
-	display:inline-block;
-	color:#777777;
-	font-size:13px;
-	padding:4px 20px;
-	text-decoration:none;
-	background: none;
-	border: none;
-}
-button:hover, input[ type = submit ]:hover {
-	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
-	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
-	box-shadow:inset 0px 1px 0px 0px #ffffff;
-	-moz-border-radius:6px;
-	-webkit-border-radius:6px;
-	border-radius:6px;
-	border:1px solid #dcdcdc;
-	display:inline-block;
-	color:#777777;
-	font-size:13px;
-	padding:4px 20px;
-	text-decoration:none;
-	text-shadow:1px 1px 0px #ffffff;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #eee), color-stop(1, #fff) );
-	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
-	background-color:#dfdfdf;
-	cursor: pointer;
-}*/
-button, input[ type = submit ] {
+button, input[ type = submit ], button.ui-button {
 		-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
 		-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
 		box-shadow:inset 0px 1px 0px 0px #ffffff;
-		background: none;
+		background: none !important;
 		-moz-border-radius:6px;
 		-webkit-border-radius:6px;
 		border-radius:6px;
@@ -323,11 +267,11 @@ button, input[ type = submit ] {
 		text-decoration:none;
 		text-shadow:1px 1px 0px #ffffff;
 }
-button:hover, input[ type = submit ]:hover {
-		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #eee), color-stop(1, #fff) );
-		background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
-		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
-		background-color:#dfdfdf;
+button:hover, input[ type = submit ]:hover, button.ui-button:hover {
+		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #eee), color-stop(1, #fff) ) !important;
+		background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% ) !important;
+		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed') !important;
+		background-color:#dfdfdf !important;
 }
 button:active, input[ type = submit ]:hover {
 		position:relative;
@@ -408,3 +352,27 @@ ul.properties_list li label{
 ul.properties_list li div{
 	margin-left: 120px;
 }
+
+/**
+* Dialog layout
+*/
+.ui-dialog{
+	border: none;
+}
+.ui-dialog .ui-dialog-titlebar{
+	background: #8cf;
+	border: none;
+}
+.ui-dialog .ui-dialog-titlebar .ui-dialog-title{
+	font-weight: normal;
+	color: white;
+	font-size: 16px;
+	letter-spacing: normal;
+}
+.ui-dialog .ui-dialog-buttonpane{
+	background: #cef;
+}
+.ui-button-text-only, .ui-button-text{
+	padding: .2em .5em !important;
+}
+
