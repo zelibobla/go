@@ -62,7 +62,6 @@ var Edit_Item = function( options ){
 				? $( event.target ).parent().parent().parent()
 				: $( event.target ).parent().parent(),
 			item_id = row.attr( 'item_id' ),
-			table = item_id ? row.parent() : $( event.target ).parent().find( 'table').find( 'tbody' ),
 			caption = item_id
 					? translator[ _resource + '_edit_caption' ]
 					: translator[ _resource + '_add_caption' ],
@@ -112,7 +111,8 @@ var Edit_Item = function( options ){
 							window.location = response.redirect;
 						} else {
 							dialog_handler.dialog( 'close' );
-							table.html( response.html );
+							_handler.html( response.html );
+							listen();
 							_callbacks.onFormSuccess();
 						}
 					/**
@@ -180,6 +180,15 @@ var Edit_Item = function( options ){
 		});		
 	}
 
-	$( '.' + _classes.edit ).bind( 'click', editItem );
-	$( '.' + _classes.delete ).bind( 'click', deleteItem );
+	/**
+	* bind event listeners
+	*/
+	var listen = function(){
+		$( '.' + _classes.edit ).unbind();
+		$( '.' + _classes.delete ).unbind();
+		$( '.' + _classes.edit ).bind( 'click', editItem );
+		$( '.' + _classes.delete ).bind( 'click', deleteItem );
+	}
+	
+	listen();
 }

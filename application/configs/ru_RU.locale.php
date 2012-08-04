@@ -5,6 +5,10 @@
  *
  */
 $translation_table = array(
+	
+	/**
+	* core module
+	*/
 	'add' => "Добавить",
 	'edit' => "Редактировать",
 	'delete' => "Удалить",
@@ -27,6 +31,20 @@ $translation_table = array(
 	'mail_from' => "Администрация сайта %s",
 	'mail_body' => "Здравствуйте, %s!\n\n%s\n\nС уважением, администрация сайта %s",
 
+	'core_voice_image_resize_failed' => "Не удалось сохранить изображение",
+	'core_voice_file_access_denied' => "Нет доступа к файлу %s",
+	'core_voice_please_signup' => "Вы под гостевой учётной записью. Пожалуйста войдите или зарегистрируйтесь",
+	'core_voice_invalid_data' => "Предоставлены недостаточные или неверные данные. Операция отклонена.",
+	'core_voice_insufficient_privileges' => "У вас недостаточно прав для совершения этой операции",
+	'core_voice_edited' => "Данные сохранены",
+	'core_voice_added' => "Успешно добавлено",
+	'core_voice_deleted' => "Удалено",
+	
+	'menu_logout' => "Выход",
+	
+	/**
+	* user module
+	*/
 	'user_email' => "адрес электронной почты",
 	'user_password' => "пароль",
 	'user_remember' => "запомнить",
@@ -53,6 +71,8 @@ $translation_table = array(
 	'user_profile_edit_header' => "Редактирование ваших данных",
 	'user_add_caption' => "Добавление пользователя",
 	'user_edit_caption' => "Редактирование пользователя",
+	'user_no_one_yet' => "Пока что нет пользователей",
+	'user_caption' => "Пользователи",
 	
 	'user_voice_welcome' => "Спасибо за регистрацию, %s! Добро пожаловать!",
 	'user_voice_edited' => "Данные пользователя %s отредактированы",
@@ -61,14 +81,7 @@ $translation_table = array(
 	'user_voice_not_found' => "Пользователя с таким адресом электронной почты не нашлось",
 	'user_voice_already_signed_up' => "Вы уже вошли в качестве подтверждённого пользователя. Вам не требуется восстанавливать пароль",
 	'user_voice_password_sent' => "Новый пароль отправлен на %s",
-
-	'core_voice_image_resize_failed' => "Не удалось сохранить изображение",
-	'core_voice_file_access_denied' => "Нет доступа к файлу %s",
-	'core_voice_please_signup' => "Вы под гостевой учётной записью. Пожалуйста войдите или зарегистрируйтесь",
-	'core_voice_invalid_data' => "Предоставлены недостаточные или неверные данные. Операция отклонена.",
-	'core_voice_insufficient_privileges' => "У вас недостаточно прав для совершения этой операции",
-	'core_voice_edited' => "Данные сохранены",
-	'core_voice_added' => "Успешно добавлено",
-	'core_voice_deleted' => "Удалено"
+	
+	'user_menu' => 'Пользователи',
 );
 ?>

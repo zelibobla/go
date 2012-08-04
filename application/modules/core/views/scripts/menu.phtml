@@ -4,7 +4,7 @@
  * zelibobla@gmail.com
  *
  */
-
+$t = Zend_Registry::get( 'translator' );
 $acl = $this->navigation()->getAcl();
 $role = $this->navigation()->getRole();
 $current_route = Zend_Controller_Front::getInstance()->getRouter()->getCurrentRouteName();
@@ -22,9 +22,9 @@ if( count( $this->container ) ){
 		if( 'home' == $route ){
 			$menu_item = '<a href="' . $this->url( array(), $route ) . '"><div class="icon_' . $route . '"></div></a>';
 		} elseif( false !== strpos( $class, 'active' ) ) {
-			$menu_item = $page;
+			$menu_item = $t->_( $page->getLabel() );
 		} else {
-			$menu_item = $this->menu()->htmlify( $page );
+			$menu_item = '<a href="' . $this->url( array(), $page->getRoute() ) . '">' . $t->_( $page->getLabel() ) . '</a>';
 		}
 		$pages = $page->getPages();
 		if( !empty( $pages ) ){
@@ -33,9 +33,9 @@ if( count( $this->container ) ){
 			foreach( $pages as $subpage ){
 				if( $subpage->getRoute() == $current_route ){
 					$show_submenu = true;
-					$submenu .= '<li class="active">' . $subpage->__toString() . '</li>';
+					$submenu .= '<li class="active">' . $t->_( $subpage->getLabel() ) . '</li>';
 				} else {
-					$submenu .= '<li>' . $this->menu()->htmlify( $subpage ) . '</li>';
+					$submenu .= '<li><a href="' . $this->url( array(), $subpage->getRoute() ) . '">' . $t->_( $subpage->getLabel() ) . '</li>';
 				}
 			
 			}

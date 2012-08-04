@@ -74,8 +74,7 @@ class Go_Controller_CRUD extends Go_Controller_Default {
 
 		$settings = $this->_user->getSettings();
 		$item_class = $this->_item_class;
-		$select = $item_class::selectTuned( $settings[ $resources . '_table' ][ 'columns' ],
-											$settings[ $resources . '_table' ][ 'items_per_page' ] );
+		$select = $item_class::getDbTable()->select( array( 'is_active' => true ) );
 		$this->view->items = $this->_getPaginator( $select );
 
 	}

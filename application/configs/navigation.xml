@@ -2,19 +2,18 @@
 <config>
 	<nav>
 		<home>
-			<label>В начало</label>
 			<route>home</route>
 			<resource>user</resource>
 			<privilege>edit</privilege>
 		</home>
 		<users>
-			<label>Пользователи</label>
+			<label>user_menu</label>
 			<route>users</route>
 			<resource>user</resource>
 			<privilege>edit</privilege>
 		</users>
 		<logout>
-			<label>Выход</label>
+			<label>menu_logout</label>
 			<route>logout</route>
 			<resource>profile</resource>
 			<privilege>logout</privilege>

@@ -5,42 +5,45 @@
  *
  */
 ?>
-<? if( !count( $this->items ) ) :?>
-	<h2>Пока что нет пользователей</h2>
-<? else : ?>
-	<? if( !$this->no_layout ) :?>
-		<div class="users_layout">
-				<table id="items_table"
-					   resource="user"
-					   edit_url="/user/index/edit"
-					   delete_url="/user/index/delete"
-					   edit_class="item_edit"
-					   delete_class="item_delete">
-					<caption>Пользователи</caption>
-					<thead>
-						<tr>
-							<th>имя</th>
-							<th>email</th>
-							<td></td>
-						</tr>
-					</thead>
-					<tbody>
+<div class="users_layout"
+	 id="items_table"
+	 resource="user"
+	 edit_url="/user/index/edit"
+	 delete_url="/user/index/delete"
+	 edit_class="item_edit"
+	 delete_class="item_delete">
+	<? if( !count( $this->items ) ) :?>
+		<h2><?=$this->t( 'user_no_one_yet' )?></h2>
+	<? else : ?>
+		<? if( !$this->no_layout ) :?>
+			<table>
+				<caption><?=$this->t( 'user_caption' )?></caption>
+				<thead>
+					<tr>
+						<th><?=$this->t( 'user_name' )?></th>
+						<th><?=$this->t( 'user_email' )?></th>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+		<? endif ?>
+				<? foreach( $this->items as $i ) :?>
+					<tr item_name="<?=$i->getName()?>" item_id="<?=$i->getId()?>">
+						<td><?=$i->getName()?></td>
+						<td><?=$i->getEmail()?></td>
+						<td class="controls">
+							<button class="item_edit edit"><div class="icon"></div></button>
+							<button class="item_delete delete"><div class="icon"></div></button>
+						</td>
+					</tr>
+				<? endforeach ?>
+		<? if( !$this->no_layout ) :?>
+				</tbody>
+			</table>
+			<?=$this->paginationControl( $this->items )?>
+		<? endif ?>
 	<? endif ?>
-					<? foreach( $this->items as $i ) :?>
-						<tr item_name="<?=$i->getName()?>" item_id="<?=$i->getId()?>">
-							<td><?=$i->getName()?></td>
-							<td><?=$i->getEmail()?></td>
-							<td class="controls">
-								<button class="item_edit edit"><div class="icon"></div></button>
-								<button class="item_delete delete"><div class="icon"></div></button>
-							</td>
-						</tr>
-					<? endforeach ?>
 	<? if( !$this->no_layout ) :?>
-					</tbody>
-				</table>
-				<?=$this->paginationControl( $this->items )?>
-			<button class="item_edit add"><div class="icon"></div></button>
-		</div>
+		<button class="item_edit add"><div class="icon"></div></button>
 	<? endif ?>
-<? endif ?>
+</div>
