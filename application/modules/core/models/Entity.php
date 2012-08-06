@@ -22,9 +22,9 @@ class Core_Model_Entity extends Core_Model_Item {
 	* @return void
 	*/
 	public function init(){
-		try{
+		if( Zend_Registry::isRegistered( 'user' ) ){
 			$user_id = Zend_Registry::get( 'user' )->getId();
-		} catch ( Exception $e ) {
+		} else {
 			$user_id = null;
 		}
 		if( false == $this->getId() ){
