@@ -59,7 +59,7 @@ class Go_Db_Table extends Zend_Db_Table_Abstract {
 	*/
 	public function get( $params = null ){
 
-		$select = $this->select( $params );
+		$select = $this->getSelect( $params );
 
 		$rowset = $this->fetchAll( $select );
 		$rows_number = count( $rowset );
