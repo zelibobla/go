@@ -132,7 +132,7 @@ class Go_Controller_CRUD extends Go_Controller_Default {
 	}
 
 	protected function afterFaultEdit(){
-		return $this->_helper->json( array( 'result' => false, 'html' => $this->_form->render() ) );		
+		return $this->_helper->json( array( 'result' => false, 'html' => $this->_form->render() ) );
 	}
 
 	protected function beforeSuccessEdit(){}
@@ -276,5 +276,17 @@ class Go_Controller_CRUD extends Go_Controller_Default {
 		}
 	}
 
+	/**
+	* instantiate item and bring it into view
+	* @return void
+	*/
+	public function profileAction(){
+		$item_class = $this->_item_class;
+		if( false == ( $id = ( int ) $this->_request->getParam( 'id' ) ) ||
+			false == ( $this->view->item = $item_class::build( $id ) ) ){
+			$this->_notify( $this->_( 'core_voice_invalid_data' ) );
+			return $this->_redirector->gotoRoute( array(), 'home' );
+		}
+	}
 }
 

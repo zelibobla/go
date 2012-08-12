@@ -193,6 +193,7 @@ table th{
 	padding: 2px 10px;
 	color: #5af;
 	border-bottom: 1px solid #def;
+	font-size: 9pt;
 }
 table td{
 	padding: 10px 10px;
@@ -200,6 +201,7 @@ table td{
 }
 table tbody td{
 	vertical-align:top;
+	font-size: 9pt;
 }
 table tbody tr .controls{
 	display: none;
@@ -273,6 +275,16 @@ button:hover, input[ type = submit ]:hover, button.ui-button:hover {
 		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed') !important;
 		background-color:#dfdfdf !important;
 }
+button[ disabled = disabled ],
+input[ type = submit ][ disabled = disabled ],
+button.ui-button[ disabled = disabled ],
+button[ disabled = disabled ]:hover,
+input[ type = submit ][ disabled = disabled ]:hover,
+button.ui-button[ disabled = disabled ]:hover
+{
+	color: #eee;
+	background: none !important;
+}
 button:active, input[ type = submit ]:hover {
 		position:relative;
 		top:1px;
@@ -344,13 +356,14 @@ ul.properties_list{
 }
 ul.properties_list li{
 	margin: 10px 0px;
+	clear: both;
 }
 ul.properties_list li label{
-	width: 100px;
+	width: 200px;
 	float: left;
 }
 ul.properties_list li div{
-	margin-left: 120px;
+	margin-left: 220px;
 }
 
 /**

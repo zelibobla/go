@@ -19,8 +19,10 @@ class Core_Model_Settings {
 	*/
 	public function __construct(){
 		$this->filename = APPLICATION_PATH . '/configs/settings.json';
+
 		if( false == ( $content = @file_get_contents( $this->filename ) ) ||
 			false == ( $options = json_decode( $content, true ) ) ) return;
+		unset( $options[ 'filename' ] );
 		$this->setOptions( $options );
 		return $this;
 	}
