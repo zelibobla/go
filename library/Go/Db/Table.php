@@ -167,7 +167,6 @@ class Go_Db_Table extends Zend_Db_Table_Abstract {
 	*/
 	private function saveRelations( $one_key, $many_key, array $args ){
 
-		if( null == $args[ 1 ] ) $many = array();
 		$one_index = $this->_referenceMap[ $one_key ][ 'columns' ][ 0 ];
 		$many_index = $this->_referenceMap[ $many_key ][ 'columns' ][ 0 ];
 		$many_ref_index = $this->_referenceMap[ $many_key ][ 'refColumns' ];
@@ -177,6 +176,7 @@ class Go_Db_Table extends Zend_Db_Table_Abstract {
 		*/
 		$where = $this->getAdapter()->quoteInto( $one_index . " = ?", $args[ 0 ] );
 		$this->delete( $where );
+		if( null == $args[ 1 ] ) return;
 		
 		/**
 		* only valid many_items can be related, so filter income array: leave only those that are exists in DB
@@ -184,10 +184,13 @@ class Go_Db_Table extends Zend_Db_Table_Abstract {
 		$many_table_class = $this->_referenceMap[ $many_key ][ 'refTableClass' ];
 		$many_table = new $many_table_class();
 		$select = $many_table->select()->where( $many_ref_index .
-												" IN ( '" . addslashes( implode( "','", $args[ 1 ] ) ) . "' )" );
+												" IN ( '" . implode( "','", $args[ 1 ] ) . "' )" );
+
 		foreach( $many_table->fetchAll( $select ) as $many_item ){
 			$row = $this->createRow( array( $one_index => $args[ 0 ], $many_index => $many_item[ $many_ref_index ] ) )
 						->save();
+
 		}
+
 	}
 }
