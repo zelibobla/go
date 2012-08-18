@@ -16,7 +16,7 @@ class Core_Plugin_Misc extends Zend_Controller_Plugin_Abstract {
 		$db_adapter = Zend_Db_Table::getDefaultAdapter();
 		$auth_adapter = new Zend_Auth_Adapter_DbTable(
 			$db_adapter,
-			Go_Factory::getDbTable( 'User_Model_User' )->info( 'name' ),
+			User_Model_User::getDbTable()->info( 'name' ),
 			'email',
 			'password_hash',
 			"MD5( CONCAT( '" . Zend_Registry::get( 'static_salt' ) . "' , ? , password_salt ) )" );

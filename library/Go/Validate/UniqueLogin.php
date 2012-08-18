@@ -18,7 +18,7 @@ class Go_Validate_UniqueLogin extends Zend_Validate_Abstract {
 		$value = ( string ) $value;
 		$this->_setValue( $value );
  
- 		if( true == ( Go_Factory::get( 'User_Model_User', $value ) ) ){
+ 		if( true == ( User_Model_User::build( $value ) ) ){
 			$this->_error( self::NOT_UNIQUE );
  			return false;
  		} else {

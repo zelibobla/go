@@ -22,7 +22,7 @@ class Core_Model_Item extends Zend_Db_Table_Row_Abstract {
 	*/
 	public function __construct( $params = array() ){
 		$self_class_name = get_class( $this );
-		$this->_table = Go_Factory::getDbTable( $self_class_name );
+		$this->_table = self::getDbTable();
 		parent::__construct( $params );
 		$options = isset( $params[ 'data' ] ) ? $params[ 'data' ] : $params;
 		foreach( $options as $property => $value ){
@@ -162,7 +162,21 @@ class Core_Model_Item extends Zend_Db_Table_Row_Abstract {
 	* @return Zend_Db_Table class or child
 	*/
 	public static function getDbTable(){
-		return Go_Factory::getDbTable( get_called_class() );
+		$class_name = get_called_class();
+		$temp = str_replace( '_Model', '_Model_DbTable', $class_name );
+		$db_table_class = Go_Misc::plural( $temp );
+
+		$row_class = class_exists( $class_name ) ? $class_name : "Core_Model_Item";
+
+		if( !( class_exists( $db_table_class ) ) ){
+			$table_name = self::getTableName( $class_name );
+			$table_name = Zend_Registry::get( 'prefix' ) . Go_Misc::plural( strtolower( str_replace( "_Model", "", $class_name ) ) );
+			$db_table = new Go_Db_Table( array( 'name' => $table_name ) );
+			$db_table->setRowClass( $row_class );
+			return $db_table;
+		} else {
+			return new $db_table_class();
+		}
 	}
 	
 }

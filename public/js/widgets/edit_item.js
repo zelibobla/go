@@ -111,7 +111,7 @@ var Edit_Item = function( options ){
 							window.location = response.redirect;
 						} else {
 							dialog_handler.dialog( 'close' );
-							_handler.html( response.html );
+							_handler.replaceWith( response.html );
 							listen();
 							_callbacks.onFormSuccess();
 						}

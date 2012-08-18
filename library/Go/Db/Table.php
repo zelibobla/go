@@ -81,16 +81,17 @@ class Go_Db_Table extends Zend_Db_Table_Abstract {
 	*						   tranlsations table
 	* @return array [ value_key ] => value_name
 	*/
-	public function reference( $params = null, $translator, $translator_prefix ){
+	public function reference( $params = null, $translator = null, $translator_prefix = null ){
 		
 		$select = $this->select( $params );
 		$rowset = $this->fetchAll( $select );
 		$res = array();
 		foreach( $rowset as $row ){
+			$value = $translator ? $translator->_( "{$translator_prefix}$row->name" ) : $row->name;
 			if( isset( $row->id ) ){
-				$res[ $row->id ] = $translator->_( "{$translator_prefix}$row->name" );
+				$res[ $row->id ] = $value;
 			} else {
-				$res[ $row->name ] = $translator->_( "{$translator_prefix}$row->name" );
+				$res[ $row->name ] = $value;
 			}
 		}
 		return $res;

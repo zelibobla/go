@@ -123,8 +123,10 @@ class Go_Controller_CRUD extends Go_Controller_Default {
 		}
 
 		$item = $item ?: new $this->_item_class();
-		$this->_item = $item->setOptions( $form->getValues() )
-							->setUpdatedAt( date( "Y-m-d H:i:s" ) );
+		$this->_item = $item->setOptions( $form->getValues() );
+		if( property_exists( "updated_at", $item_class ) ){
+			$item->setUpdatedAt( date( "Y-m-d H:i:s" ) );
+		}
 
 		$this->beforeSuccessEdit();
 		$this->_item_id = $item->save();
@@ -140,7 +142,8 @@ class Go_Controller_CRUD extends Go_Controller_Default {
 	protected function afterSuccessEdit(){
 		$this->indexAction();
 		$this->view->no_layout = true;
-		$html = $this->view->render( 'index/index.phtml' );
+		$controller = $this->_request->getParam( 'controller' );
+		$html = $this->view->render( $controller . '/index.phtml' );
 	    return $this->_helper->json( array( 'result' => true, 'html' => $html ) );
 	}
 
