@@ -62,7 +62,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 		/**
 		* if user saved in cookies
 		*/
-		if( true == ( $hash = addslashes( $_COOKIE[ 'hash' ] ) ) &&
+		if( true == ( $hash = addslashes( @$_COOKIE[ 'hash' ] ) ) &&
 		 	$user = User_Model_User::build( array( 'password_hash' => $hash ) ) ){
 			
 			$auth->getStorage()->write( $user->getEmail() );

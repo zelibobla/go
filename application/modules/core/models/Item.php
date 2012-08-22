@@ -169,7 +169,6 @@ class Core_Model_Item extends Zend_Db_Table_Row_Abstract {
 		$row_class = class_exists( $class_name ) ? $class_name : "Core_Model_Item";
 
 		if( !( class_exists( $db_table_class ) ) ){
-			$table_name = self::getTableName( $class_name );
 			$table_name = Zend_Registry::get( 'prefix' ) . Go_Misc::plural( strtolower( str_replace( "_Model", "", $class_name ) ) );
 			$db_table = new Go_Db_Table( array( 'name' => $table_name ) );
 			$db_table->setRowClass( $row_class );
