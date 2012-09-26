@@ -23,17 +23,17 @@ var Edit_Item = function( options ){
 		!( options.handler.length ) ) throw 'Edit_Item class can\'t be instantiated without handler of DOM element to attach to';
 
 	var o = options,
-		_translator = options.translator ? options.translator : {},						// translator associative array
+		_translator = o.translator ? o.translator : {},						// translator associative array
 		_dialog = {
-			width: options.dialog_width ? parseInt( options.dialog_width ) : 600,		// dialog window width
-			height: options.dialog_height ? parseInt( options.dialog_height ) : 'auto', // dialog window height
-			position: options.dialog_position ? dialog_position : [ 300, 100 ],			// dialog window position
+			width: o.dialog_width ? parseInt( o.dialog_width ) : 600,		// dialog window width
+			height: o.dialog_height ? parseInt( o.dialog_height ) : 'auto', // dialog window height
+			position: o.dialog_position ? o.dialog_position : [ 300, 100 ],			// dialog window position
 		},
-		_waiting = options.waiting ? options.waiting : '<img src="/css/ajax_loader_bar.gif">',
-		_handler = options.handler,
+		_waiting = o.waiting ? o.waiting : '<img src="/css/ajax_loader_bar.gif">',
+		_handler = o.handler,
 		_callbacks = {
-			onDialogLoad: 'function' == typeof options.onDialogLoad ? options.onDialogLoad : function(){},
-			onFormSuccess: 'function' == typeof options.onFormSuccess ? options.onFormSuccess : function(){},
+			onDialogLoad: 'function' == typeof o.onDialogLoad ? o.onDialogLoad : function(){},
+			onFormSuccess: 'function' == typeof o.onFormSuccess ? o.onFormSuccess : function(){},
 		},
 		_id = _handler.attr( 'id' ),
 		_resource = _handler.attr( 'resource' ),
@@ -45,6 +45,7 @@ var Edit_Item = function( options ){
 			edit: _handler.attr( 'edit_class' ),
 			delete: _handler.attr( 'delete_class' ),
 		},
+		_extra = 'undefined' != typeof o.extra ? o.extra : {},
 		_self = this;
 
 	if( -1 != ( _id + _resource + _urls.edit + _urls.delete + _classes.edit + _classes.delete ).indexOf( 'undefined' ) )
@@ -58,9 +59,7 @@ var Edit_Item = function( options ){
 		/**
 		* construct defaults
 		*/
-		var row = $( event.target ).hasClass( 'icon' )
-				? $( event.target ).parent().parent().parent()
-				: $( event.target ).parent().parent(),
+		var row = $( event.target ).closest( 'tr' ),
 			item_id = row.attr( 'item_id' ),
 			caption = item_id
 					? translator[ _resource + '_edit_caption' ]
@@ -75,9 +74,11 @@ var Edit_Item = function( options ){
 		* retrieve dialog content
 		*/
 		var dialogLoadContent = function(){
+			var data = _extra;
+			data.id = item_id;
 			$.ajax({
 				url: _urls.edit,
-				data: { id: item_id },
+				data: data,
 				success: function( response ){
 					if( '' == response.html ||
 						'undefined' == typeof response.html ){
@@ -101,7 +102,7 @@ var Edit_Item = function( options ){
 				url: _urls.edit,
 				type: 'post',
 				data: dialog_handler.find( 'form' ).serialize(),
-				success: function( response ){
+				success: function( response ){console.log( response.html );
 					waiting = false;
 					/**
 					* server side validation success
@@ -184,10 +185,8 @@ var Edit_Item = function( options ){
 	* bind event listeners
 	*/
 	var listen = function(){
-		$( '.' + _classes.edit ).unbind();
-		$( '.' + _classes.delete ).unbind();
-		$( '.' + _classes.edit ).bind( 'click', editItem );
-		$( '.' + _classes.delete ).bind( 'click', deleteItem );
+		$( '.' + _classes.edit ).unbind().bind( 'click', editItem );
+		$( '.' + _classes.delete ).unbind().bind( 'click', deleteItem );
 	}
 	
 	listen();

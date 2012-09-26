@@ -83,7 +83,7 @@ class Go_Db_Table extends Zend_Db_Table_Abstract {
 	*/
 	public function reference( $params = null, $translator = null, $translator_prefix = null ){
 		
-		$select = $this->select( $params );
+		$select = $this->getSelect( $params );
 		$rowset = $this->fetchAll( $select );
 		$res = array();
 		foreach( $rowset as $row ){
@@ -95,6 +95,15 @@ class Go_Db_Table extends Zend_Db_Table_Abstract {
 			}
 		}
 		return $res;
+	}
+	
+	/**
+	* fetch rows from db according to specified array of params
+	* @param params - array of params
+	* @return Zend_Db_Table_Rowset
+	*/
+	public function fetchBy( $params ){
+		return $this->fetchAll( $this->getSelect( $params ) );
 	}
 
 	/**

@@ -69,6 +69,7 @@ class Go_Controller_CRUD extends Go_Controller_Default {
 
 	/**
 	* show items listing
+	* @return void
 	*/
 	public function indexAction() {
 
@@ -175,6 +176,32 @@ class Go_Controller_CRUD extends Go_Controller_Default {
 
 	public function afterSuccessDelete(){
 		$action = $this->_resource == $this->_module ? "deleted" : Go_Misc::underscoreToCamel( $this->_resource ) . "Deleted";
+		return $this->_helper->json( array( 'result' => true ) );
+	}
+
+	/**
+	* perform delete undo
+	*/
+	public function deleteundoAction() {
+		$item_class = $this->_item_class;
+
+		if( false == ( $id = ( int ) $this->_request->getParam( 'id' ) ) || 
+			 ( true ==  $id &&
+			   false == ( $item = $item_class::build( $id ) ) ) ){
+
+			$this->_notify( $this->_( 'core_voice_invalid_data' ) );
+			return $this->_helper->json( array( 'result' => false ) );
+
+		} elseif( false == $this->_isAllowed( $this->_resource, 'edit' ) ){
+
+			$this->_notify( $this->_( 'core_voice_insufficient_privileges' ) );
+			return $this->_helper->json( array( 'result' => false ) );
+
+		}
+		
+		$item->setIsActive( 1 )
+			 ->save();
+    	$this->_item = $item;
 		return $this->_helper->json( array( 'result' => true ) );
 	}
 	
