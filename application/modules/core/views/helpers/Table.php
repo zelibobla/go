@@ -14,10 +14,10 @@ class Zend_View_Helper_Table extends Zend_View_Helper_Abstract {
 		$params = array()
 	) {
 		if( false == is_array( $params[ 'columns' ] ) ||
- 			 false == count( $params[ 'columns' ] ) ) return $params[ 'empty_message' ];
+ 			false == count( $params[ 'columns' ] ) ) return $params[ 'empty_message' ];
 
 		$html = "";
-		if( false == empty( $collection ) ) {
+//		if( false == empty( $collection ) ) {
 			/**
 			* merge defaults and saved user settings
 			*/
@@ -148,8 +148,7 @@ class Zend_View_Helper_Table extends Zend_View_Helper_Abstract {
 					}
 				}
 				
-				$delete = true == $params[ 'delete_button_text' ] &&
-                  $this->view->allowed( $params[ 'resource' ], 'delete' );
+				$delete = $this->view->allowed( $params[ 'resource' ], 'delete' );
 				if( true == ( $edit = $this->view->allowed( $params[ 'resource' ], 'edit' ) ) ||
 					 true == $delete ){
 					$html .= '<td class="controls">' 
@@ -162,7 +161,7 @@ class Zend_View_Helper_Table extends Zend_View_Helper_Abstract {
 				$html .= '</tr>';
 			}
 			$html .= '</tbody></table>';
-		}
+//		}
 		return $html;
 	}
 	

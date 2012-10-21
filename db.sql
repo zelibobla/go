@@ -91,3 +91,20 @@ CREATE TABLE `user_users` (
 --
 
 INSERT INTO `user_users` VALUES(1, 'zelibobla', '2012-07-31 16:11:44', '2012-07-31 16:11:44', 1, 1, 'zelibobla@gmail.com', '6dd9c9f45855d3d3df1b954c28f5aa95', 'zthR', 'admin', '2012-08-03 22:08:39', NULL, 'a_7e33c60b.jpg');
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `core_histories`
+--
+
+CREATE TABLE IF NOT EXISTS `core_histories` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) DEFAULT NULL,
+  `entity_id` int(10) unsigned NOT NULL,
+  `entity_class` varchar(255) NOT NULL,
+  `entity_options` text NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
