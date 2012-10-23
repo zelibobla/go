@@ -131,5 +131,3 @@ class Forum_Form_Bulletin extends Go_Form {
 
 	}
 }
-
-?>

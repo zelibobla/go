@@ -50,5 +50,3 @@ class User_Form_User extends Go_Form {
 		parent::init();
 	}
 }
-
-?>

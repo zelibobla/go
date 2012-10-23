@@ -58,5 +58,3 @@ class Forum_Form_Topic extends Go_Form {
 		$this->setAttrib( "class", "forum_post" );
 	}
 }
-
-?>

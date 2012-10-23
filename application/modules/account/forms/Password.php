@@ -31,5 +31,3 @@ class Account_Form_Password extends Go_Form {
 		$this->setAction( "/account/profile/password" );
 	}
 }
-
-?>

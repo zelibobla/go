@@ -26,5 +26,3 @@ class Account_Form_Recover extends Go_Form {
 		parent::init();
 	}
 }
-
-?>

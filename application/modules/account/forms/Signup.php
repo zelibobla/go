@@ -45,5 +45,3 @@ class Account_Form_Signup extends Go_Form {
 		parent::init();
 	}
 }
-
-?>

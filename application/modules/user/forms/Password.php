@@ -32,5 +32,3 @@ class User_Form_Password extends Go_Form {
 		parent::init();
 	}
 }
-
-?>

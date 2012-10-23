@@ -43,5 +43,3 @@ class Account_Form_Profile extends Go_Form {
 		$this->getElement( 'submit' )->removeDecorator( 'label' );
 	}
 }
-
-?>
