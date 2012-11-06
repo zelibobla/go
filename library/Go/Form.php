@@ -71,6 +71,12 @@ class Go_Form extends Zend_Form {
 		}
 
 		$this->addElementPrefixPath( 'Go_Validate_', 'Go/Validate', 'validate' );
+		$translate = new Zend_Translate( array( 'adapter' => 'array',
+		 										'content' => Zend_Registry::get( 'translator' )->getData(),
+		 										'locale' => 'en' ) );
+
+		$this->setTranslator( $translate );
+
 	}
 	
 	/**
