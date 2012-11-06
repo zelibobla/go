@@ -11,14 +11,18 @@ class Zend_View_Helper_Date extends Zend_View_Helper_Abstract {
 
 	public function date(
 		$date,
-		$current_year = false
+		$current_year = false,
+		$with_time = false
 	) {
 		$time = strtotime( $date );
 		if( date( "Y", $time ) == date( "Y", time() ) &&
-		 	true == $current_year ){
-			return "<nobr>" . strftime("%e %b", $time ) . "</nobr>";
-		} else {
-			return "<nobr>" . strftime("%e %b %Y", $time ) . "</nobr>";
-		}
+		 	false == $current_year )
+			$pattern = "%e %b";
+		else
+			$pattern = "%e %b %Y";
+		if( $with_time )
+			$pattern .= " %H:%M";
+
+		return "<nobr>" . strftime( $pattern, $time ) . "</nobr>";
 	}
 }
